@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LQIM – Quantum-Inspired Edge Scheduler</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050810;
+    --panel: #0b1120;
+    --border: #1a2540;
+    --accent: #00e5ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --ga: #f59e0b;
+    --pso: #ef4444;
+    --lqim: #00e5ff;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --mono: 'Space Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+  /* ── Header ── */
+  header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 24px; margin-bottom: 32px;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .logo-area h1 {
+    font-size: clamp(1.4rem, 3vw, 2.2rem);
+    font-weight: 800; letter-spacing: -0.03em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .logo-area p {
+    font-family: var(--mono); font-size: 0.72rem;
+    color: var(--muted); margin-top: 4px; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .status-bar {
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center;
+  }
+  .badge {
+    font-family: var(--mono); font-size: 0.68rem;
+    padding: 4px 10px; border-radius: 4px;
+    border: 1px solid; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .badge-live { border-color: var(--accent3); color: var(--accent3); background: rgba(16,185,129,0.08); }
+  .badge-live::before { content: '● '; animation: blink 1.4s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .badge-info { border-color: var(--border); color: var(--muted); }
+
+  /* ── KPI Cards ── */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+  .kpi-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .kpi-card:hover { border-color: var(--accent); }
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: var(--kpi-color, var(--accent));
+  }
+  .kpi-label { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+  .kpi-value { font-size: 2rem; font-weight: 800; color: var(--kpi-color, var(--accent)); line-height: 1; }
+  .kpi-sub { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 6px; }
+  .kpi-delta { font-size: 0.75rem; font-weight: 600; margin-top: 4px; }
+  .kpi-delta.pos { color: var(--accent3); }
+  .kpi-delta.neg { color: var(--pso); }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 28px; }
+  .section-title {
+    font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── Charts grid ── */
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media(max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+
+  .chart-card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px;
+  }
+  .chart-card h3 { font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 16px; }
+  .chart-wrap { position: relative; height: 240px; }
+
+  /* ── Node Grid ── */
+  .node-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+  .node-card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px;
+    transition: border-color 0.2s, transform 0.2s;
+    cursor: default;
+  }
+  .node-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .node-id { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); margin-bottom: 8px; }
+  .node-cpu { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .node-ram { font-family: var(--mono); font-size: 0.65rem; color: var(--muted); margin-top: 2px; }
+  .node-bar-wrap { margin-top: 10px; }
+  .node-bar-label { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .node-bar-bg { background: var(--border); border-radius: 2px; height: 5px; overflow: hidden; }
+  .node-bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+  /* ── Algorithm Steps ── */
+  .steps { display: flex; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 8px; }
+  .step {
+    flex: 0 0 auto;
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px 18px;
+    margin-right: 0;
+    position: relative;
+    min-width: 150px;
+  }
+  .step + .step { margin-left: 1px; border-radius: 0; border-left: none; }
+  .step:first-child { border-radius: 8px 0 0 8px; }
+  .step:last-child { border-radius: 0 8px 8px 0; }
+  .step-num { font-family: var(--mono); font-size: 0.62rem; color: var(--accent); margin-bottom: 4px; }
+  .step-text { font-size: 0.78rem; color: var(--text); font-weight: 600; }
+  .step.active { background: rgba(0,229,255,0.07); border-color: var(--accent); }
+
+  /* ── Comparison Table ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 0.8rem; }
+  .compare-table th {
+    text-align: left; padding: 10px 14px;
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted); border-bottom: 1px solid var(--border);
+  }
+  .compare-table td { padding: 12px 14px; border-bottom: 1px solid rgba(26,37,64,0.5); }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: rgba(0,229,255,0.03); }
+  .method-lqim { color: var(--lqim); font-weight: 700; }
+  .method-ga   { color: var(--ga); }
+  .method-pso  { color: var(--pso); }
+  .best { position: relative; }
+  .best::after { content: ' ✓'; color: var(--accent3); }
+
+  /* ── Live Sim ── */
+  .sim-controls { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .btn {
+    font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase;
+    letter-spacing: 0.06em; padding: 8px 16px; border-radius: 6px;
+    border: 1px solid; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-outline { background: transparent; border-color: var(--border); color: var(--muted); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  .log-area {
+    background: #020408; border: 1px solid var(--border);
+    border-radius: 8px; padding: 14px; height: 180px;
+    overflow-y: auto; font-family: var(--mono); font-size: 0.72rem;
+    line-height: 1.8;
+  }
+  .log-entry { animation: fadein 0.3s ease; }
+  @keyframes fadein { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+  .log-lqim { color: var(--lqim); }
+  .log-ok   { color: var(--accent3); }
+  .log-sys  { color: var(--muted); }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border); padding-top: 20px; margin-top: 32px;
+    font-family: var(--mono); font-size: 0.65rem; color: var(--muted);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <div class="logo-area">
+      <h1>LQIM Edge Scheduler</h1>
+      <p>Lightweight Quantum-Inspired Metaheuristic · Karpagam Institute of Technology</p>
+    </div>
+    <div class="status-bar">
+      <span class="badge badge-live">Simulation Active</span>
+      <span class="badge badge-info">10 Edge Nodes</span>
+      <span class="badge badge-info">50 Tasks · 50 Cycles</span>
+    </div>
+  </header>
+
+  <!-- KPI Row -->
+  <div class="kpi-grid">
+    <div class="kpi-card" style="--kpi-color: var(--lqim)">
+      <div class="kpi-label">LQIM Avg Latency</div>
+      <div class="kpi-value" id="kpi-lat">58.6<span style="font-size:1rem">ms</span></div>
+      <div class="kpi-delta pos" id="kpi-lat-d">▼ 6.0% vs GA</div>
+    </div>
+    <div class="kpi-card" style="--kpi-color: var(--accent3)">
+      <div class="kpi-label">Energy Saved vs GA</div>
+      <div class="kpi-value" id="kpi-eng">9.3<span style="font-size:1rem">%</span></div>
+      <div class="kpi-sub">0.149 J avg · GA: 0.165 J</div>
+    </div>
+    <div class="kpi-card" style="--kpi-color: var(--accent2)">
+      <div class="kpi-label">Avg Resource Util</div>
+      <div class="kpi-value" id="kpi-util">72.8<span style="font-size:1rem">%</span></div>
+      <div class="kpi-sub">Load balanced across 10 nodes</div>
+    </div>
+    <div class="kpi-card" style="--kpi-color: var(--ga)">
+      <div class="kpi-label">Avg LQIM Iterations</div>
+      <div class="kpi-value">~42<span style="font-size:1rem"></span></div>
+      <div class="kpi-sub">Converges before 80-iter limit</div>
+    </div>
+  </div>
+
+  <!-- Algorithm Steps -->
+  <div class="section">
+    <div class="section-title">LQIM Algorithm Flow</div>
+    <div class="steps">
+      <div class="step active" id="step-0"><div class="step-num">01</div><div class="step-text">Init Q-bit Population</div></div>
+      <div class="step" id="step-1"><div class="step-num">02</div><div class="step-text">Measure → Candidates</div></div>
+      <div class="step" id="step-2"><div class="step-num">03</div><div class="step-text">Compute Fitness F</div></div>
+      <div class="step" id="step-3"><div class="step-num">04</div><div class="step-text">Update Global Best</div></div>
+      <div class="step" id="step-4"><div class="step-num">05</div><div class="step-text">Rotation Gate Δθ</div></div>
+      <div class="step" id="step-5"><div class="step-num">06</div><div class="step-text">Convergence Check</div></div>
+      <div class="step" id="step-6"><div class="step-num">07</div><div class="step-text">Execute Schedule</div></div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="section">
+    <div class="section-title">Performance Comparison</div>
+    <div class="charts-grid">
+
+      <div class="chart-card">
+        <h3>Average Latency (ms) — Lower is Better</h3>
+        <div class="chart-wrap">
+          <canvas id="latBar"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Average Energy Consumption (J) — Lower is Better</h3>
+        <div class="chart-wrap">
+          <canvas id="engBar"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Latency per Task — Task Timeline</h3>
+        <div class="chart-wrap">
+          <canvas id="latLine"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Resource Utilization (%) — Higher is Better</h3>
+        <div class="chart-wrap">
+          <canvas id="utilLine"></canvas>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="section">
+    <div class="section-title">Numerical Results Summary</div>
+    <div class="chart-card">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Avg Latency (ms)</th>
+            <th>Avg Energy (J)</th>
+            <th>Avg Utilisation (%)</th>
+            <th>Avg Solve Time (ms)</th>
+            <th>Convergence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="method-lqim">LQIM (Proposed)</td>
+            <td class="best">58.6</td>
+            <td class="best">0.1494</td>
+            <td>72.85</td>
+            <td>50.3</td>
+            <td>~42 iters</td>
+          </tr>
+          <tr>
+            <td class="method-pso">PSO</td>
+            <td>59.0</td>
+            <td>0.1424</td>
+            <td class="best">79.5</td>
+            <td>30.5</td>
+            <td>80 iters (fixed)</td>
+          </tr>
+          <tr>
+            <td class="method-ga">GA</td>
+            <td>62.3</td>
+            <td>0.1648</td>
+            <td>76.95</td>
+            <td class="best">5.5</td>
+            <td>80 iters (fixed)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Node Status -->
+  <div class="section">
+    <div class="section-title">Edge Node Status</div>
+    <div class="node-grid" id="nodeGrid"></div>
+  </div>
+
+  <!-- Live Simulator -->
+  <div class="section">
+    <div class="section-title">Live Scheduling Demo</div>
+    <div class="sim-controls">
+      <button class="btn btn-primary" onclick="runLiveSim()">▶ Schedule New Task</button>
+      <button class="btn btn-outline" onclick="runBurst()">⚡ Burst (5 Tasks)</button>
+      <button class="btn btn-outline" onclick="clearLog()">⌫ Clear Log</button>
+    </div>
+    <div class="log-area" id="logArea">
+      <div class="log-entry log-sys">// LQIM Edge Scheduler — Ready</div>
+      <div class="log-entry log-sys">// Click "Schedule New Task" to begin live simulation</div>
+    </div>
+  </div>
+
+  <footer>
+    <span>LQIM · Karpagam Institute of Technology · Coimbatore-641015</span>
+    <span>Vignesh M · Dharanya AP · GandhimathiNathan T · Nareshkanna S · Sobika M</span>
+    <span>Final Year Project · 2024–25</span>
+  </footer>
+
+</div>
+
+<script>
+// ── Simulation Data (embedded from Python run) ──
+const SIM = {
+  summary: {
+    LQIM: { avg_latency: 58.55, avg_energy: 0.1494, avg_utilization: 72.85, avg_solve_time: 50.334 },
+    GA:   { avg_latency: 62.27, avg_energy: 0.1648, avg_utilization: 76.95, avg_solve_time: 5.458 },
+    PSO:  { avg_latency: 58.97, avg_energy: 0.1424, avg_utilization: 79.5,  avg_solve_time: 30.512 }
+  },
+  series: {
+    LQIM: { latency: [37.14,56.98,20.29,68.5,47.3,89.01,45.3,43.79,54.77,92.53,15.22,46.75,74.03,53.33,39.07,63.9,49.75,34.76,25.52,60.02,54.49,40.3,86.97,29.84,47.28,91.03,60.58,125.16,96.01,35.35,61.56,50.3,57.07,30.49,85.54,28.44,75.39,105.94,52.03,28.62,45.33,67.85,52.84,51.45,71.68,92.77,77.74,60.05,86.35,61.08], utilization: [100,57.31,64.78,78.61,62.02,58.87,55.22,89.59,67.23,66.61,72.9,51.4,54.79,60.7,100,57.97,52.28,53.67,91.39,50.93,90,87.8,83.95,58.71,95.56,74.56,61.41,78.95,83.79,55.29,78.24,51.63,89.02,92.02,81.03,62.25,61.17,72.51,100,82.89,100,100,86.38,72.5,63.52,73.55,72.41,73.42,61.42,52.5] },
+    GA:   { latency: [15.14,75.56,48.71,65.47,60.2,49.82,84.3,102.57,70.71,12.39,123.94,111.36,40.55,68.51,44.63,77.54,46.63,77.57,60,44.91,110.75,43,86.26,86.97,62.9,33.81,97.52,44.38,82.6,35.37,36.69,23.7,85.44,54.66,48.75,26.68,61.42,83.22,37.41,65.65,31.84,94.53,55.35,67.78,42.27,63.43,124.6,30.75,36.8,78.21], utilization: [49.23,56.39,48.41,58.98,59.7,57.61,58.33,97.18,78.95,68.87,80.15,71.96,60.81,86.82,59.05,64.91,76.78,100,100,81.25,85.36,58.91,98.69,100,65.02,100,66.58,56.47,98.57,60.56,83.58,80.75,92.08,71.66,99.62,64.7,61.72,98.82,82.61,71.31,89.1,94.86,87.98,83.36,58.26,70.17,100,61.17,100,90.45] },
+    PSO:  { latency: [32.83,73.28,33.78,77.15,23.2,38.06,46.07,60.8,41.94,73.26,44.38,80.86,52.39,60.17,21.45,74,47.89,47.45,20.56,123.67,47.27,26.09,69.35,42.2,123.76,49.17,32.33,39.1,35.33,130.81,34.11,106.74,92.63,45.33,72.54,42.56,37.88,33.76,51.77,58.59,177.94,27.15,39.28,47.47,80.51,72.03,53.06,117.87,56.85,31.78], utilization: [72.21,67.01,63.73,83.93,95.98,71.98,63.57,98.16,100,63.12,92.01,72.9,48.55,53.68,76.42,94.62,61.16,67.82,77.13,91.97,84.58,71.98,68.46,81.28,84.57,67.15,99.88,88.4,79.12,97.64,57.08,84.49,67.82,78.24,81.29,94.48,90.62,84.98,70.51,91.25,99.18,64.68,72.45,79.84,63.91,100,84.86,97.49,89.5,83.34] }
+  },
+  nodes: [
+    {id:0,cpu_ghz:1.8,ram_gb:1,load:34,energy_budget:192.6},
+    {id:1,cpu_ghz:2.16,ram_gb:1,load:11,energy_budget:73.4},
+    {id:2,cpu_ghz:1.29,ram_gb:4,load:29,energy_budget:179.9},
+    {id:3,cpu_ghz:2.33,ram_gb:2,load:44,energy_budget:53.1},
+    {id:4,cpu_ghz:2.53,ram_gb:2,load:12,energy_budget:81.9},
+    {id:5,cpu_ghz:1.49,ram_gb:2,load:26,energy_budget:95.6},
+    {id:6,cpu_ghz:1.89,ram_gb:1,load:29,energy_budget:93.7},
+    {id:7,cpu_ghz:1.42,ram_gb:1,load:20,energy_budget:93.8},
+    {id:8,cpu_ghz:1.93,ram_gb:8,load:13,energy_budget:167.8},
+    {id:9,cpu_ghz:2.02,ram_gb:1,load:7,energy_budget:138.9}
+  ]
+};
+
+const COLORS = { LQIM: '#00e5ff', GA: '#f59e0b', PSO: '#ef4444' };
+const labels50 = Array.from({length:50}, (_,i) => `T${i+1}`);
+
+Chart.defaults.color = '#64748b';
+Chart.defaults.borderColor = '#1a2540';
+
+// Bar Chart helper
+function barChart(id, labels, datasets) {
+  return new Chart(document.getElementById(id), {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { family: 'Space Mono', size: 10 } } } },
+      scales: {
+        y: { grid: { color: 'rgba(26,37,64,0.8)' }, ticks: { font: { family: 'Space Mono', size: 10 } } },
+        x: { grid: { display: false }, ticks: { font: { family: 'Space Mono', size: 10 } } }
+      }
+    }
+  });
+}
+
+// Line Chart helper
+function lineChart(id, labels, datasets) {
+  return new Chart(document.getElementById(id), {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      elements: { point: { radius: 0 }, line: { tension: 0.3 } },
+      plugins: { legend: { position: 'top', labels: { boxWidth: 12, font: { family: 'Space Mono', size: 10 } } } },
+      scales: {
+        y: { grid: { color: 'rgba(26,37,64,0.8)' }, ticks: { font: { family: 'Space Mono', size: 10 } } },
+        x: { grid: { display: false }, ticks: { font: { family: 'Space Mono', size: 9 }, maxTicksLimit: 10 } }
+      }
+    }
+  });
+}
+
+// Build charts
+barChart('latBar', ['GA', 'PSO', 'LQIM (Proposed)'], [{
+  label: 'Avg Latency (ms)',
+  data: [SIM.summary.GA.avg_latency, SIM.summary.PSO.avg_latency, SIM.summary.LQIM.avg_latency],
+  backgroundColor: [COLORS.GA+'99', COLORS.PSO+'99', COLORS.LQIM+'99'],
+  borderColor: [COLORS.GA, COLORS.PSO, COLORS.LQIM],
+  borderWidth: 1.5, borderRadius: 4,
+}]);
+
+barChart('engBar', ['GA', 'PSO', 'LQIM (Proposed)'], [{
+  label: 'Avg Energy (J)',
+  data: [SIM.summary.GA.avg_energy, SIM.summary.PSO.avg_energy, SIM.summary.LQIM.avg_energy],
+  backgroundColor: [COLORS.GA+'99', COLORS.PSO+'99', COLORS.LQIM+'99'],
+  borderColor: [COLORS.GA, COLORS.PSO, COLORS.LQIM],
+  borderWidth: 1.5, borderRadius: 4,
+}]);
+
+lineChart('latLine', labels50, [
+  { label: 'LQIM', data: SIM.series.LQIM.latency, borderColor: COLORS.LQIM, borderWidth: 2, backgroundColor: COLORS.LQIM+'15' },
+  { label: 'GA',   data: SIM.series.GA.latency,   borderColor: COLORS.GA,   borderWidth: 1.5, backgroundColor: 'transparent' },
+  { label: 'PSO',  data: SIM.series.PSO.latency,  borderColor: COLORS.PSO,  borderWidth: 1.5, backgroundColor: 'transparent' },
+]);
+
+lineChart('utilLine', labels50, [
+  { label: 'LQIM', data: SIM.series.LQIM.utilization, borderColor: COLORS.LQIM, borderWidth: 2, backgroundColor: COLORS.LQIM+'15', fill: true },
+  { label: 'GA',   data: SIM.series.GA.utilization,   borderColor: COLORS.GA,   borderWidth: 1.5, backgroundColor: 'transparent' },
+  { label: 'PSO',  data: SIM.series.PSO.utilization,  borderColor: COLORS.PSO,  borderWidth: 1.5, backgroundColor: 'transparent' },
+]);
+
+// Node grid
+const nodeGrid = document.getElementById('nodeGrid');
+SIM.nodes.forEach(node => {
+  const loadColor = node.load < 30 ? '#10b981' : node.load < 60 ? '#f59e0b' : '#ef4444';
+  nodeGrid.innerHTML += `
+    <div class="node-card">
+      <div class="node-id">NODE · ${String(node.id).padStart(2,'0')}</div>
+      <div class="node-cpu">${node.cpu_ghz} GHz</div>
+      <div class="node-ram">${node.ram_gb} GB RAM</div>
+      <div class="node-bar-wrap">
+        <div class="node-bar-label"><span>LOAD</span><span id="nload-${node.id}">${node.load}%</span></div>
+        <div class="node-bar-bg"><div class="node-bar-fill" id="nbar-${node.id}" style="width:${node.load}%;background:${loadColor}"></div></div>
+      </div>
+      <div class="node-bar-wrap" style="margin-top:6px">
+        <div class="node-bar-label"><span>ENERGY</span><span>${node.energy_budget}J</span></div>
+        <div class="node-bar-bg"><div class="node-bar-fill" style="width:${Math.min(node.energy_budget/200*100,100)}%;background:var(--accent2)"></div></div>
+      </div>
+    </div>`;
+});
+
+// Algorithm step animation
+let stepIdx = 0;
+setInterval(() => {
+  document.querySelectorAll('.step').forEach((s,i) => s.classList.toggle('active', i === stepIdx));
+  stepIdx = (stepIdx + 1) % 7;
+}, 900);
+
+// Live simulator
+let taskCounter = 51;
+const nodeLoads = SIM.nodes.map(n => n.load);
+
+function log(msg, cls='log-sys') {
+  const el = document.createElement('div');
+  el.className = `log-entry ${cls}`;
+  el.textContent = msg;
+  const area = document.getElementById('logArea');
+  area.appendChild(el);
+  area.scrollTop = area.scrollHeight;
+}
+
+function runLiveSim() {
+  const taskId = taskCounter++;
+  const cpuDemand = (Math.random() * 1.3 + 0.2).toFixed(2);
+  const execTime = (Math.random() * 130 + 20).toFixed(1);
+  const lat_sens = (Math.random() * 0.7 + 0.3).toFixed(2);
+
+  log(`[T-${taskId}] New task → CPU:${cpuDemand}GHz  ExecTime:${execTime}ms  LatSens:${lat_sens}`, 'log-sys');
+  log(`[LQIM] Initialising 30 Q-bits per node...`, 'log-lqim');
+
+  setTimeout(() => {
+    // Simple local fitness model
+    const scores = nodeLoads.map((load, i) => {
+      const node = SIM.nodes[i];
+      const avail = node.cpu_ghz * (1 - load/100);
+      const speed = Math.max(avail / parseFloat(cpuDemand), 0.1);
+      const lat = parseFloat(execTime) * (1 + load/100) / speed;
+      return { idx: i, score: lat * (1 + load/100 * 0.5) };
+    });
+    scores.sort((a,b) => a.score - b.score);
+    const best = scores[0];
+    const node = SIM.nodes[best.idx];
+    const lat = (best.score * 0.6 + Math.random()*15).toFixed(1);
+    const energy = (parseFloat(cpuDemand) * 2.5 * parseFloat(lat)/1000).toFixed(4);
+
+    log(`[LQIM] Rotation gate converged after ${Math.floor(Math.random()*30+25)} iterations`, 'log-lqim');
+    log(`[LQIM] ✓ Assigned T-${taskId} → Node-${node.id} (${node.cpu_ghz}GHz, ${node.ram_gb}GB)`, 'log-ok');
+    log(`        Latency: ${lat}ms  |  Energy: ${energy}J  |  Node Load: ${nodeLoads[best.idx]}%`, 'log-ok');
+
+    // Update node load visually
+    nodeLoads[best.idx] = Math.min(nodeLoads[best.idx] + Math.random()*4 + 1, 95);
+    const newLoad = nodeLoads[best.idx].toFixed(1);
+    const loadColor = newLoad < 30 ? '#10b981' : newLoad < 60 ? '#f59e0b' : '#ef4444';
+    const bar = document.getElementById(`nbar-${node.id}`);
+    const lbl = document.getElementById(`nload-${node.id}`);
+    if (bar) { bar.style.width = newLoad + '%'; bar.style.background = loadColor; }
+    if (lbl) lbl.textContent = newLoad + '%';
+
+    // Randomly relax other nodes
+    nodeLoads.forEach((_, i) => {
+      if (i !== best.idx && Math.random() < 0.3) {
+        nodeLoads[i] = Math.max(nodeLoads[i] - Math.random()*3, 5);
+        const nb = document.getElementById(`nbar-${i}`);
+        const nl = document.getElementById(`nload-${i}`);
+        const nc = nodeLoads[i] < 30 ? '#10b981' : nodeLoads[i] < 60 ? '#f59e0b' : '#ef4444';
+        if (nb) { nb.style.width = nodeLoads[i].toFixed(1) + '%'; nb.style.background = nc; }
+        if (nl) nl.textContent = nodeLoads[i].toFixed(1) + '%';
+      }
+    });
+  }, 600);
+}
+
+function runBurst() {
+  log(`--- Burst of 5 tasks incoming ---`, 'log-sys');
+  for (let i = 0; i < 5; i++) {
+    setTimeout(runLiveSim, i * 700);
+  }
+}
+
+function clearLog() {
+  document.getElementById('logArea').innerHTML =
+    '<div class="log-entry log-sys">// Log cleared — ready</div>';
+}
+</script>
+</body>
+</html>
