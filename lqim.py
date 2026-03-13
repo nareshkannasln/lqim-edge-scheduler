@@ -1,19 +1,8 @@
-"""
-LQIM - Lightweight Quantum-Inspired Metaheuristic
-Real-Time Resource Scheduling in Heterogeneous Edge Environments
-
-Based on:
-  Han & Kim (2002) - Quantum-inspired evolutionary algorithm
-  Proposed LQIM methodology from research paper
-
-Author: Vignesh M et al., Karpagam Institute of Technology
-"""
-
 import numpy as np
 import time
 import random
 from dataclasses import dataclass, field
-from typing import List, Dict, Tuple, Optional
+from typing import List, Dict, Tuple, Optional  
 
 
 # ──────────────────────────────────────────────
