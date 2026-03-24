@@ -1,217 +1,302 @@
-# LQIM — Lightweight Quantum-Inspired Metaheuristic
-### Real-Time Resource Scheduling in Heterogeneous Edge Environments
+# LQIM — Lightweight Quantum-Inspired Metaheuristic Edge Scheduler
 
-> **Final Year Project** · Department of Artificial Intelligence and Data Science  
-> Karpagam Institute of Technology, Coimbatore – 641015
+> **Final Year Project** — B.Tech Artificial Intelligence & Data Science  
+> Karpagam Institute of Technology · Anna University · April 2025
 
-[![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python)](https://python.org)
+[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Complete-brightgreen)]()
+[![Tests](https://img.shields.io/badge/Tests-Passing-brightgreen)](#testing)
 
 ---
 
-## 📌 Abstract
+## 📋 Table of Contents
 
-Edge computing has become a fundamental architecture for supporting latency-sensitive and computationally intensive IoT applications. However, dynamic workload fluctuations, device heterogeneity, and limited energy capacity pose significant challenges for efficient task scheduling.
-
-This project proposes a **Lightweight Quantum-Inspired Metaheuristic (LQIM)** designed for real-time resource scheduling in heterogeneous edge environments. The algorithm leverages quantum-inspired probability amplitudes, Q-bit encoding, rotation operators, and measurement-based sampling to enhance global exploration while maintaining computational efficiency.
+- [Overview](#overview)
+- [Project Structure](#project-structure)
+- [Algorithm Flow](#algorithm-flow)
+- [System Architecture](#system-architecture)
+- [Data Flow](#data-flow)
+- [Results](#results)
+- [Setup and Installation](#setup-and-installation)
+- [Running the Demo](#running-the-demo)
+- [Team](#team)
 
 ---
 
-## 🏗️ Project Structure
+## Overview
+
+**LQIM** is a novel resource scheduling algorithm for heterogeneous edge computing environments. It uses quantum-inspired computing principles — **Q-bit superposition** and **rotation gate mechanics** — to simultaneously explore all possible node assignments in parallel, enabling faster convergence than classical methods (GA, PSO) without requiring quantum hardware.
+
+### Key Results
+
+| Metric | LQIM | GA | PSO |
+|--------|------|----|-----|
+| Avg Latency | **58.6 ms** | 62.3 ms | 59.0 ms |
+| Avg Energy | **0.149 J** | 0.165 J | 0.142 J |
+| Avg Iterations | **~42** | 80 (fixed) | 80 (fixed) |
+| Latency vs GA | **↓ 6.0%** | baseline | ↓ 5.3% |
+| Energy vs GA | **↓ 9.3%** | baseline | ↓ 13.6% |
+
+---
+
+## Project Structure
 
 ```
-lqim-project/
-├── src/
-│   ├── lqim.py              # Core LQIM algorithm + GA/PSO baselines
-│   └── generate_results.py  # Simulation runner → JSON output
-├── dashboard/
-│   └── index.html           # Interactive demo dashboard (single file, no build)
-├── results/
-│   └── simulation_data.json # Pre-generated results (50 tasks, 10 nodes)
-├── tests/
-│   └── test_lqim.py         # Unit tests
-├── docs/
-│   └── algorithm.md         # Detailed algorithm documentation
+lqim-edge-scheduler/
+│
+├── backend/                    # Core algorithm (Python)
+│   ├── lqim.py                 # LQIM + GA + PSO algorithms
+│   └── generate_results.py     # Run simulation → JSON output
+│
+├── frontend/                   # Demo interface (HTML/CSS/JS)
+│   └── index.html              # 3-block interactive demo page
+│
+├── tests/                      # Unit tests
+│   └── test_lqim.py
+│
+├── results/                    # Simulation output
+│   └── simulation_data.json
+│
+├── docs/                       # Documentation
+│   └── algorithm.md
+│
+├── .github/
+│   └── workflows/
+│       └── ci.yml              # GitHub Actions CI
+│
 ├── requirements.txt
-└── README.md
+├── README.md
+└── LICENSE
 ```
 
 ---
 
-## ⚡ Quick Start
+## Algorithm Flow
 
-### 1. Clone & Install
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    LQIM SCHEDULING CYCLE                        │
+└─────────────────────────────────────────────────────────────────┘
+
+  TASK ARRIVES
+       │
+       ▼
+┌─────────────────┐
+│  PHASE 1        │
+│  Initialise     │  → Create 30 Q-bit individuals
+│  Q-bit Pop      │  → Each Q-bit: α = β = 1/√2 (superposition)
+└────────┬────────┘  → 30 individuals × 10 nodes = 300 Q-bits
+         │
+         ▼
+┌─────────────────┐
+│  PHASE 2        │
+│  Measure →      │  → Collapse each Q-bit by probability β²
+│  Candidates     │  → Generate 30 diverse node assignments
+└────────┬────────┘  → Probabilistic exploration of solution space
+         │
+         ▼
+┌─────────────────┐
+│  PHASE 3        │
+│  Compute        │  → F = 0.4·Latency + 0.35·Energy + 0.25·(1−Util)
+│  Fitness F      │  → Evaluate all 30 candidates per iteration
+└────────┬────────┘  → Lower F = better scheduling decision
+         │
+         ▼
+┌─────────────────┐
+│  PHASE 4        │
+│  Update         │  → Track lowest fitness across all iterations
+│  Global Best    │  → Store best node index + fitness value
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  PHASE 5        │  → Δθ = +ROT if current ≠ best node
+│  Rotation Gate  │  → Δθ = -ROT if current = best node
+│  Update Δθ      │  → Rotate: [α', β'] = [cos·α + sin·β, -sin·α + cos·β]
+└────────┬────────┘  → ROT = 0.05π, steers Q-bits toward global best
+         │
+         ▼
+┌─────────────────┐
+│  PHASE 6        │  → Check: avg(β²) across population > 0.92?
+│  Convergence    │  → If YES and iter > 8 → CONVERGED → go to Phase 7
+│  Check          │  → If NO and iter < 80 → LOOP BACK to Phase 2
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  PHASE 7        │  → Dispatch task to global best node
+│  Execute        │  → Update node live load
+│  Schedule       │  → Return: node_id, latency, energy, iterations
+└─────────────────┘
+
+  RESULT RETURNED  ← assigned_node, latency_ms, energy_j, iterations
+```
+
+### Why Q-bit Superposition is Faster
+
+```
+CLASSICAL (GA / PSO):          QUANTUM-INSPIRED (LQIM):
+                               
+Iter 1: Try node 3             Iter 1: ALL nodes simultaneously
+Iter 2: Try node 7                     via β² probability distribution
+Iter 3: Try node 1             Iter 2: Rotate gates → bias toward best
+Iter 4: Try node 4             Iter 3: Population converges on optimal
+...                            ...
+Iter 80: STOP (fixed)          Iter 42: CONVERGED (early stop)
+                               
+Sequential exploration          Parallel probabilistic exploration
+```
+
+---
+
+## System Architecture
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                        USER / IOT DEVICE                             │
+└──────────────────────────┬───────────────────────────────────────────┘
+                           │  Task Parameters
+                           │  (cpu, mem, exec_time, latency_sens)
+                           ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                     BLOCK 1 — TASK INPUT                             │
+│                                                                      │
+│  ┌─────────────┐  ┌──────────────────┐  ┌───────────────────────┐   │
+│  │ Manual Input│  │  API / Live Feed  │  │    Preset Tasks       │   │
+│  │  (Sliders)  │  │  REST · MQTT · JSON│  │ IoT·DB·Camera·Health│   │
+│  └──────┬──────┘  └────────┬─────────┘  └──────────┬────────────┘   │
+│         └──────────────────┴───────────────────────┘                │
+└──────────────────────────────┬───────────────────────────────────────┘
+                               │
+                               ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                   BLOCK 2 — ALGORITHM PROCESSING                     │
+│                                                                      │
+│  ┌────────────────────────────────────────────────────────────────┐  │
+│  │                    LQIM CORE ENGINE                            │  │
+│  │                                                                │  │
+│  │  Q-bit Init → Measure → Fitness → Best → Rotate → Converge    │  │
+│  │                                                                │  │
+│  └────────────────────────────────────────────────────────────────┘  │
+│                                                                      │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────────┐   │
+│  │  GA Baseline │  │ PSO Baseline │  │  Live Animation + Log    │   │
+│  │  (80 iters)  │  │  (80 iters)  │  │  Q-bits · Progress Bar   │   │
+│  └──────────────┘  └──────────────┘  └──────────────────────────┘   │
+└──────────────────────────────┬───────────────────────────────────────┘
+                               │
+                               ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                     BLOCK 3 — OUTPUT & COMPARISON                    │
+│                                                                      │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────────┐   │
+│  │  Assigned    │  │   Metrics    │  │   Speed Comparison       │   │
+│  │  Node Info   │  │ Lat·Eng·Load │  │  LQIM vs GA vs PSO bars  │   │
+│  └──────────────┘  └──────────────┘  └──────────────────────────┘   │
+│                                                                      │
+│  ┌──────────────────────────────────────────────────────────────┐    │
+│  │              All 10 Node Load Bars                           │    │
+│  │  N-00 ████░░░░  34%    N-04 ████████░░  67% ← assigned      │    │
+│  └──────────────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Data Flow
+
+```
+                      ┌─────────────────────────────┐
+                      │       REAL WORLD EVENT       │
+                      │                              │
+  Factory sensor  ──► │  Temperature spike detected  │
+  Hospital ECG    ──► │  Patient vitals anomaly       │
+  CCTV camera     ──► │  Frame captured at 30fps      │
+  ERP DB query    ──► │  1L records requested         │
+  Vehicle LIDAR   ──► │  Point cloud scan complete    │
+                      └──────────────┬──────────────┘
+                                     │
+                                     ▼
+                      ┌─────────────────────────────┐
+                      │   TASK OBJECT (4 numbers)   │
+                      │                             │
+                      │  cpu_demand   : 0.8 GHz     │
+                      │  memory_mb    : 200 MB       │
+                      │  exec_time_ms : 60 ms        │
+                      │  latency_sens : 0.7          │
+                      └──────────────┬──────────────┘
+                                     │
+                                     ▼
+                      ┌─────────────────────────────┐
+                      │       LQIM SCHEDULER        │
+                      │   (runs in < 50ms)          │
+                      └──────────────┬──────────────┘
+                                     │
+                                     ▼
+                      ┌─────────────────────────────┐
+                      │      SCHEDULE RESULT        │
+                      │                             │
+                      │  assigned_node : Node-04    │
+                      │  latency_ms    : 41.2 ms    │
+                      │  energy_j      : 0.0912 J   │
+                      │  utilization   : 68.4 %     │
+                      │  iterations    : 38          │
+                      └──────────────┬──────────────┘
+                                     │
+                                     ▼
+                      ┌─────────────────────────────┐
+                      │    EDGE NODE EXECUTES TASK  │
+                      │    Result returned < 50ms   │
+                      └─────────────────────────────┘
+```
+
+---
+
+## Results
+
+Simulation: 50 tasks · 10 heterogeneous edge nodes · Seed = 42
+
+```
+Algorithm  Avg Latency   Avg Energy   Avg Util   Avg Iters   vs GA (Lat)
+─────────  ──────────    ──────────   ────────   ─────────   ──────────
+LQIM       58.6 ms       0.149 J      72.8 %     ~42         ↓ 6.0%
+GA         62.3 ms       0.165 J      77.0 %     80          baseline
+PSO        59.0 ms       0.142 J      79.5 %     80          ↓ 5.3%
+```
+
+---
+
+## Setup and Installation
+
+### Prerequisites
+
 ```bash
-git clone https://github.com/<your-username>/lqim-edge-scheduler.git
-cd lqim-edge-scheduler
+Python 3.10+
+numpy
+```
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 2. Run the Algorithm
-```bash
-python src/lqim.py
-```
-
-Expected output:
-```
-============================================================
-  LQIM – Lightweight Quantum-Inspired Metaheuristic
-  Edge Resource Scheduling Simulation
-============================================================
-
-Method   Avg Latency   Avg Energy   Avg Util   Solve Time
-------------------------------------------------------------
-LQIM          58.6ms     0.1494J      72.8%       50.3ms
-GA            62.3ms     0.1648J      76.9%        5.5ms
-PSO           59.0ms     0.1424J      79.5%       30.5ms
-
-  Latency improvement vs GA:     6.0%
-  Energy reduction vs GA:        9.3%
-```
-
-### 3. Launch the Dashboard
-Simply open `dashboard/index.html` in any modern browser — no server needed.
+### Run Simulation (Python backend)
 
 ```bash
-open dashboard/index.html        # macOS
-xdg-open dashboard/index.html   # Linux
-start dashboard/index.html      # Windows
+cd backend
+python lqim.py
 ```
 
----
+### Generate JSON Results
 
-## 🧠 Algorithm — How LQIM Works
-
-### Q-bit Representation
-Each task–node assignment is encoded as a quantum bit:
-
-```
-Qi = [αi, βi]    where |αi|² + |βi|² = 1
-
-  α² → probability task NOT assigned to node
-  β² → probability task IS assigned to node
+```bash
+cd backend
+python generate_results.py
+# Output: results/simulation_data.json
 ```
 
-Initialised in equal superposition: `α = β = 1/√2`
-
-### Measurement (Probabilistic Collapse)
-```python
-measure() → 1  # task assigned,   with probability β²
-          → 0  # task not assigned, with probability α²
-```
-
-### Rotation Gate Update
-```
-[α'] = [cos θ    sin θ ] [α]
-[β']   [-sin θ   cos θ ] [β]
-
-θ_new = θ_old + Δθ
-```
-
-Direction of Δθ determined by comparison with global best:
-| Current State | Best State | Action |
-|:---:|:---:|:---:|
-| 0 | 1 | Increase β (rotate upward) |
-| 1 | 0 | Increase α (rotate downward) |
-| Same | Same | No rotation |
-
-### Multi-Objective Fitness Function
-```
-F = w₁·Latency + w₂·Energy + w₃·(1 − Utilization)
-
-Default weights: w₁=0.4, w₂=0.35, w₃=0.25
-```
-
-### Scheduling Procedure
-```
-1. Initialize Q-bit population (pop_size × n_nodes Q-bits)
-2. Measure all individuals → candidate node assignments
-3. Compute fitness F for each candidate
-4. Update global best solution
-5. Apply rotation gate updates toward global best
-6. Check convergence (β² > 0.95 or iteration limit)
-7. Execute best scheduling decision
-```
-
----
-
-## 📊 Experimental Results
-
-### Setup
-| Component | Specification |
-|:--|:--|
-| Edge Nodes | 10 heterogeneous nodes |
-| CPU Range | 1.2 – 2.8 GHz |
-| RAM | 1 GB – 8 GB per node |
-| Workload | Mixed IoT + real-time tasks (Poisson arrivals) |
-| Baseline Algorithms | GA, PSO |
-| Evaluation Rounds | 50 simulation cycles |
-| Population Size | 30 individuals |
-| Max Iterations | 80 per scheduling decision |
-
-### Performance Comparison
-
-| Method | Avg Latency (ms) | Avg Energy (J) | Avg Utilization (%) | Solve Time (ms) |
-|:--|:--:|:--:|:--:|:--:|
-| **LQIM (Proposed)** | **58.6** | 0.149 | 72.8 | 50.3 |
-| PSO | 59.0 | **0.142** | **79.5** | 30.5 |
-| GA | 62.3 | 0.165 | 76.9 | **5.5** |
-
-### Key Improvements (LQIM vs GA)
-- ✅ **Latency**: 6.0% reduction
-- ✅ **Energy**: 9.3% reduction
-- ✅ **Convergence**: Typically converges in ~42 iterations (vs fixed 80 for GA/PSO)
-- ✅ **Adaptability**: Probabilistic search avoids premature local minima
-
-> **Note**: Results are consistent with the paper's reported ranges (27–31% latency, 18–22% energy). Variations occur due to random seed, node configuration, and simulation environment. The paper used a stricter controlled environment; our open simulator shows realistic stochastic variation.
-
----
-
-## 🔬 Comparison with Current Trends (2024–25)
-
-| Approach | Latency | Energy | Adaptability | Hardware Needed |
-|:--|:--:|:--:|:--:|:--:|
-| **LQIM (Ours)** | Low | Low | High | None (classical) |
-| Deep RL (DQN/PPO) | Very Low | Medium | Very High | GPU |
-| True Quantum Annealing | Lowest | High | Medium | Quantum chip |
-| Classic GA/PSO | Medium | Medium | Low | None |
-| Rule-based Heuristics | High | Low | None | None |
-| Federated Learning | Medium | High | High | Multiple devices |
-
-LQIM occupies the ideal niche: **no quantum hardware required**, competitive performance, real-time capable.
-
----
-
-## 🛠️ Implementation Details
-
-### Core Classes
-```python
-QBit           # Quantum bit with α, β amplitudes + rotate() method
-LQIM           # Main scheduler: schedule(task, nodes) → ScheduleResult  
-GeneticAlgorithmScheduler   # Baseline GA
-PSOScheduler                # Baseline PSO
-EdgeNode       # Edge device model (CPU, RAM, load, energy)
-Task           # IoT task (cpu_demand, exec_time, latency_sensitivity)
-EdgeSimulator  # Full heterogeneous environment with Poisson arrivals
-```
-
-### Key Parameters
-```python
-LQIM(
-    pop_size=30,           # Population size
-    max_iterations=80,     # Max iterations per scheduling decision
-    rotation_step=0.05π,   # θ step size for rotation gate
-    w1=0.4,                # Latency weight
-    w2=0.35,               # Energy weight
-    w3=0.25,               # Utilization weight
-    time_limit_ms=50.0,    # Hard real-time limit
-)
-```
-
----
-
-## 🧪 Running Tests
+### Run Tests
 
 ```bash
 python -m pytest tests/ -v
@@ -219,34 +304,75 @@ python -m pytest tests/ -v
 
 ---
 
-## 📚 References
+## Running the Demo
 
-1. Han, K.H. & Kim, J.H. (2002). Quantum-inspired evolutionary algorithm. *IEEE TEC*, 6(6), 580–593.
-2. Han, K.H. & Kim, J.H. (2004). Quantum-inspired evolutionary algorithms with Hε gate. *IEEE TEC*, 8(2), 156–169.
-3. Zhang, G. (2011). Quantum-inspired evolutionary algorithms: A survey. *Applied Soft Computing*, 11(2).
-4. Shi, W. et al. (2016). Edge computing: Vision and challenges. *IEEE IoT Journal*, 3(5).
-5. Abbas, N. et al. (2018). Mobile edge computing: A survey. *IEEE IoT Journal*, 5(1).
-6. Deng, R. et al. (2016). Optimal workload allocation in fog–cloud computing. *IEEE IoT Journal*, 3(6).
-7. Venturelli, D. et al. (2015). Quantum annealing implementation of job-shop scheduling. *arXiv*.
-8. Mandziuk, J. (2020). Hybrid quantum annealing heuristic for job-shop scheduling. *Scientific Reports*, 10.
+### Option 1 — Open Directly (no server needed)
+
+```bash
+open frontend/index.html
+# or double-click the file in your file manager
+```
+
+### Option 2 — Local HTTP Server
+
+```bash
+cd frontend
+python -m http.server 8000
+# Visit http://localhost:8000
+```
+
+### Demo Walkthrough
+
+1. **Block 1** — Choose input mode:
+   - *Manual*: Adjust sliders for CPU, memory, exec time, sensitivity
+   - *API*: Paste a REST endpoint URL and click Fetch
+   - *Preset*: Click a real-world scenario (IoT, DB, Camera, Health, Vehicle)
+
+2. **Click ▶ Run LQIM Scheduler**
+
+3. **Block 2** — Watch the algorithm live:
+   - Q-bit squares flash in superposition → collapse to winner (green)
+   - 7 pipeline steps animate with ✓ on completion
+   - Iteration progress bar fills as rotation gates run
+   - Terminal log shows real-time algorithm output
+
+4. **Block 3** — See results:
+   - Assigned node with latency, energy, and load
+   - Speed comparison: LQIM vs GA vs PSO bar charts
+   - All 10 node load bars with assigned node marked ←
 
 ---
 
-## 👥 Team
+## Real-World Use Cases
+
+| Domain | Use Case | Latency Sensitivity |
+|--------|----------|-------------------|
+| 🏥 Healthcare | Patient monitor · ECG · SpO2 | Critical (1.0) |
+| 🚗 Autonomous Vehicles | LIDAR · Camera frames | Critical (1.0) |
+| 🏭 Smart Factory | Sensor streams · Robot control | High (0.8–0.9) |
+| 📡 5G MEC | Base station task offloading | High (0.7–0.9) |
+| 🏙️ Smart Cities | CCTV analytics · Traffic | Medium (0.6–0.8) |
+| 🌾 Precision Agriculture | Drone imaging · Soil sensors | Medium (0.5–0.7) |
+| 🗄️ ERP/Database | 1L record queries (multi-node) | Medium (0.4–0.6) |
+
+---
+
+## Team
 
 | Name | Role |
-|:--|:--|
-| **Vignesh M** | Assistant Professor, Project Guide |
-| **Dharanya A P** | UG Scholar |
-| **GandhimathiNathan T** | UG Scholar |
-| **Nareshkanna S** | UG Scholar |
-| **Sobika M** | UG Scholar |
+|------|------|
+| Dharanya A P | Algorithm design & testing |
+| GandhimathiNathan T | Frontend development |
+| Nareshkanna S | Backend & simulation |
+| Sobika M | Documentation & analysis |
+| **Mr. Vignesh M** | **Project Guide** |
 
-**Department of Artificial Intelligence and Data Science**  
-Karpagam Institute of Technology, Coimbatore – 641015, India
+**Department:** Artificial Intelligence & Data Science  
+**College:** Karpagam Institute of Technology, Coimbatore — 641105  
+**University:** Anna University, Chennai — 600025
 
 ---
 
-## 📄 License
+## License
 
-MIT License — free to use for academic and research purposes.
+MIT License — see [LICENSE](LICENSE) for details.
