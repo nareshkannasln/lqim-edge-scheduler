@@ -1,0 +1,1627 @@
+{
+  "summary": {
+    "lqim": {
+      "avg_latency": 47.86,
+      "avg_energy": 0.1309,
+      "avg_utilization": 91.7,
+      "avg_iterations": 38.2,
+      "avg_solve_time": 16.93
+    },
+    "ga": {
+      "avg_latency": 47.53,
+      "avg_energy": 0.1309,
+      "avg_utilization": 91.1,
+      "avg_iterations": 80.0,
+      "avg_solve_time": 6.27
+    },
+    "pso": {
+      "avg_latency": 47.7,
+      "avg_energy": 0.1309,
+      "avg_utilization": 91.2,
+      "avg_iterations": 80.0,
+      "avg_solve_time": 33.7
+    }
+  },
+  "tasks": [
+    {
+      "task_id": 1,
+      "task_type": "IoT",
+      "cpu": 0.22,
+      "mem": 91.3,
+      "exec": 21.2,
+      "sens": 0.89,
+      "lqim": {
+        "node": 3,
+        "lat": 5.53,
+        "eng": 0.003,
+        "util": 53.44,
+        "iters": 38,
+        "solve": 15.16
+      },
+      "ga": {
+        "node": 3,
+        "lat": 5.53,
+        "eng": 0.003,
+        "util": 53.44,
+        "iters": 80,
+        "solve": 5.61
+      },
+      "pso": {
+        "node": 3,
+        "lat": 5.53,
+        "eng": 0.003,
+        "util": 53.44,
+        "iters": 80,
+        "solve": 50.48
+      }
+    },
+    {
+      "task_id": 2,
+      "task_type": "Vehicle",
+      "cpu": 1.09,
+      "mem": 484.4,
+      "exec": 10.9,
+      "sens": 0.92,
+      "lqim": {
+        "node": 5,
+        "lat": 15.54,
+        "eng": 0.0423,
+        "util": 99.15,
+        "iters": 41,
+        "solve": 16.89
+      },
+      "ga": {
+        "node": 5,
+        "lat": 15.54,
+        "eng": 0.0423,
+        "util": 99.15,
+        "iters": 80,
+        "solve": 6.01
+      },
+      "pso": {
+        "node": 5,
+        "lat": 15.54,
+        "eng": 0.0423,
+        "util": 99.15,
+        "iters": 80,
+        "solve": 32.26
+      }
+    },
+    {
+      "task_id": 3,
+      "task_type": "Vehicle",
+      "cpu": 1.6,
+      "mem": 512.2,
+      "exec": 31.5,
+      "sens": 0.97,
+      "lqim": {
+        "node": 8,
+        "lat": 41.27,
+        "eng": 0.1651,
+        "util": 95.9,
+        "iters": 38,
+        "solve": 16.14
+      },
+      "ga": {
+        "node": 8,
+        "lat": 41.27,
+        "eng": 0.1651,
+        "util": 95.9,
+        "iters": 80,
+        "solve": 6.11
+      },
+      "pso": {
+        "node": 8,
+        "lat": 41.27,
+        "eng": 0.1651,
+        "util": 95.9,
+        "iters": 80,
+        "solve": 35.63
+      }
+    },
+    {
+      "task_id": 4,
+      "task_type": "Health",
+      "cpu": 0.45,
+      "mem": 276.8,
+      "exec": 43.3,
+      "sens": 0.8,
+      "lqim": {
+        "node": 3,
+        "lat": 25.53,
+        "eng": 0.0287,
+        "util": 68.67,
+        "iters": 38,
+        "solve": 15.27
+      },
+      "ga": {
+        "node": 3,
+        "lat": 24.53,
+        "eng": 0.0276,
+        "util": 66.96,
+        "iters": 80,
+        "solve": 6.06
+      },
+      "pso": {
+        "node": 3,
+        "lat": 24.67,
+        "eng": 0.0278,
+        "util": 67.22,
+        "iters": 80,
+        "solve": 31.63
+      }
+    },
+    {
+      "task_id": 5,
+      "task_type": "DB",
+      "cpu": 1.2,
+      "mem": 336.1,
+      "exec": 48.7,
+      "sens": 0.68,
+      "lqim": {
+        "node": 7,
+        "lat": 68.13,
+        "eng": 0.2044,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 25.39
+      },
+      "ga": {
+        "node": 7,
+        "lat": 68.13,
+        "eng": 0.2044,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.74
+      },
+      "pso": {
+        "node": 7,
+        "lat": 68.13,
+        "eng": 0.2044,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 30.79
+      }
+    },
+    {
+      "task_id": 6,
+      "task_type": "Camera",
+      "cpu": 0.92,
+      "mem": 414.0,
+      "exec": 41.5,
+      "sens": 0.8,
+      "lqim": {
+        "node": 2,
+        "lat": 59.19,
+        "eng": 0.1361,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.05
+      },
+      "ga": {
+        "node": 2,
+        "lat": 59.19,
+        "eng": 0.1361,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.83
+      },
+      "pso": {
+        "node": 2,
+        "lat": 59.19,
+        "eng": 0.1361,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 40.1
+      }
+    },
+    {
+      "task_id": 7,
+      "task_type": "Camera",
+      "cpu": 1.77,
+      "mem": 518.9,
+      "exec": 52.2,
+      "sens": 0.99,
+      "lqim": {
+        "node": 9,
+        "lat": 66.02,
+        "eng": 0.2921,
+        "util": 94.62,
+        "iters": 38,
+        "solve": 15.79
+      },
+      "ga": {
+        "node": 9,
+        "lat": 66.02,
+        "eng": 0.2921,
+        "util": 94.62,
+        "iters": 80,
+        "solve": 5.9
+      },
+      "pso": {
+        "node": 9,
+        "lat": 66.02,
+        "eng": 0.2921,
+        "util": 94.62,
+        "iters": 80,
+        "solve": 30.56
+      }
+    },
+    {
+      "task_id": 8,
+      "task_type": "Health",
+      "cpu": 0.36,
+      "mem": 188.0,
+      "exec": 37.0,
+      "sens": 0.98,
+      "lqim": {
+        "node": 3,
+        "lat": 19.93,
+        "eng": 0.0179,
+        "util": 68.49,
+        "iters": 38,
+        "solve": 15.38
+      },
+      "ga": {
+        "node": 3,
+        "lat": 19.62,
+        "eng": 0.0177,
+        "util": 67.87,
+        "iters": 80,
+        "solve": 6.45
+      },
+      "pso": {
+        "node": 3,
+        "lat": 18.66,
+        "eng": 0.0168,
+        "util": 65.82,
+        "iters": 80,
+        "solve": 39.79
+      }
+    },
+    {
+      "task_id": 9,
+      "task_type": "Camera",
+      "cpu": 1.49,
+      "mem": 511.4,
+      "exec": 22.7,
+      "sens": 0.77,
+      "lqim": {
+        "node": 6,
+        "lat": 35.53,
+        "eng": 0.1323,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.91
+      },
+      "ga": {
+        "node": 6,
+        "lat": 35.53,
+        "eng": 0.1323,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.79
+      },
+      "pso": {
+        "node": 6,
+        "lat": 35.53,
+        "eng": 0.1323,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 29.99
+      }
+    },
+    {
+      "task_id": 10,
+      "task_type": "Camera",
+      "cpu": 1.98,
+      "mem": 556.6,
+      "exec": 72.0,
+      "sens": 0.81,
+      "lqim": {
+        "node": 1,
+        "lat": 97.25,
+        "eng": 0.4814,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.3
+      },
+      "ga": {
+        "node": 1,
+        "lat": 97.25,
+        "eng": 0.4814,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.79
+      },
+      "pso": {
+        "node": 1,
+        "lat": 97.25,
+        "eng": 0.4814,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 35.64
+      }
+    },
+    {
+      "task_id": 11,
+      "task_type": "Health",
+      "cpu": 0.74,
+      "mem": 209.4,
+      "exec": 28.0,
+      "sens": 0.84,
+      "lqim": {
+        "node": 2,
+        "lat": 35.99,
+        "eng": 0.0666,
+        "util": 91.86,
+        "iters": 38,
+        "solve": 15.14
+      },
+      "ga": {
+        "node": 2,
+        "lat": 35.17,
+        "eng": 0.0651,
+        "util": 90.67,
+        "iters": 80,
+        "solve": 5.68
+      },
+      "pso": {
+        "node": 2,
+        "lat": 35.98,
+        "eng": 0.0666,
+        "util": 91.84,
+        "iters": 80,
+        "solve": 30.02
+      }
+    },
+    {
+      "task_id": 12,
+      "task_type": "Camera",
+      "cpu": 1.64,
+      "mem": 505.1,
+      "exec": 24.3,
+      "sens": 0.89,
+      "lqim": {
+        "node": 8,
+        "lat": 34.28,
+        "eng": 0.1405,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.45
+      },
+      "ga": {
+        "node": 8,
+        "lat": 34.71,
+        "eng": 0.1423,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 10.82
+      },
+      "pso": {
+        "node": 8,
+        "lat": 34.06,
+        "eng": 0.1397,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 30.94
+      }
+    },
+    {
+      "task_id": 13,
+      "task_type": "Vehicle",
+      "cpu": 1.73,
+      "mem": 432.7,
+      "exec": 21.4,
+      "sens": 1.0,
+      "lqim": {
+        "node": 9,
+        "lat": 28.39,
+        "eng": 0.1228,
+        "util": 96.97,
+        "iters": 38,
+        "solve": 16.13
+      },
+      "ga": {
+        "node": 9,
+        "lat": 28.8,
+        "eng": 0.1245,
+        "util": 97.85,
+        "iters": 80,
+        "solve": 6.1
+      },
+      "pso": {
+        "node": 9,
+        "lat": 28.65,
+        "eng": 0.1239,
+        "util": 97.53,
+        "iters": 80,
+        "solve": 32.37
+      }
+    },
+    {
+      "task_id": 14,
+      "task_type": "Vehicle",
+      "cpu": 1.22,
+      "mem": 464.9,
+      "exec": 33.0,
+      "sens": 0.91,
+      "lqim": {
+        "node": 0,
+        "lat": 50.47,
+        "eng": 0.1539,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 23.79
+      },
+      "ga": {
+        "node": 6,
+        "lat": 48.79,
+        "eng": 0.1488,
+        "util": 99.31,
+        "iters": 80,
+        "solve": 5.53
+      },
+      "pso": {
+        "node": 6,
+        "lat": 48.27,
+        "eng": 0.1472,
+        "util": 98.76,
+        "iters": 80,
+        "solve": 31.35
+      }
+    },
+    {
+      "task_id": 15,
+      "task_type": "IoT",
+      "cpu": 0.68,
+      "mem": 110.2,
+      "exec": 13.3,
+      "sens": 0.97,
+      "lqim": {
+        "node": 2,
+        "lat": 16.86,
+        "eng": 0.0287,
+        "util": 89.22,
+        "iters": 38,
+        "solve": 16.62
+      },
+      "ga": {
+        "node": 2,
+        "lat": 17.08,
+        "eng": 0.029,
+        "util": 89.87,
+        "iters": 80,
+        "solve": 5.68
+      },
+      "pso": {
+        "node": 2,
+        "lat": 17.94,
+        "eng": 0.0305,
+        "util": 92.28,
+        "iters": 80,
+        "solve": 36.37
+      }
+    },
+    {
+      "task_id": 16,
+      "task_type": "Vehicle",
+      "cpu": 1.88,
+      "mem": 462.9,
+      "exec": 29.7,
+      "sens": 0.94,
+      "lqim": {
+        "node": 1,
+        "lat": 42.4,
+        "eng": 0.1993,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.57
+      },
+      "ga": {
+        "node": 1,
+        "lat": 43.21,
+        "eng": 0.2031,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 6.11
+      },
+      "pso": {
+        "node": 1,
+        "lat": 40.82,
+        "eng": 0.1919,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 32.77
+      }
+    },
+    {
+      "task_id": 17,
+      "task_type": "Health",
+      "cpu": 0.4,
+      "mem": 141.9,
+      "exec": 41.1,
+      "sens": 0.91,
+      "lqim": {
+        "node": 3,
+        "lat": 27.06,
+        "eng": 0.0271,
+        "util": 74.46,
+        "iters": 38,
+        "solve": 15.14
+      },
+      "ga": {
+        "node": 3,
+        "lat": 25.8,
+        "eng": 0.0258,
+        "util": 72.68,
+        "iters": 80,
+        "solve": 6.03
+      },
+      "pso": {
+        "node": 3,
+        "lat": 26.37,
+        "eng": 0.0264,
+        "util": 73.5,
+        "iters": 80,
+        "solve": 38.2
+      }
+    },
+    {
+      "task_id": 18,
+      "task_type": "Vehicle",
+      "cpu": 1.43,
+      "mem": 516.7,
+      "exec": 20.9,
+      "sens": 1.0,
+      "lqim": {
+        "node": 8,
+        "lat": 29.19,
+        "eng": 0.1044,
+        "util": 97.17,
+        "iters": 38,
+        "solve": 15.34
+      },
+      "ga": {
+        "node": 8,
+        "lat": 28.5,
+        "eng": 0.1019,
+        "util": 95.79,
+        "iters": 80,
+        "solve": 5.79
+      },
+      "pso": {
+        "node": 8,
+        "lat": 27.53,
+        "eng": 0.0984,
+        "util": 93.78,
+        "iters": 80,
+        "solve": 29.94
+      }
+    },
+    {
+      "task_id": 19,
+      "task_type": "DB",
+      "cpu": 1.01,
+      "mem": 236.4,
+      "exec": 35.7,
+      "sens": 0.34,
+      "lqim": {
+        "node": 5,
+        "lat": 42.35,
+        "eng": 0.1069,
+        "util": 95.95,
+        "iters": 38,
+        "solve": 15.09
+      },
+      "ga": {
+        "node": 5,
+        "lat": 44.88,
+        "eng": 0.1133,
+        "util": 99.07,
+        "iters": 80,
+        "solve": 5.75
+      },
+      "pso": {
+        "node": 5,
+        "lat": 43.18,
+        "eng": 0.109,
+        "util": 97.01,
+        "iters": 80,
+        "solve": 36.99
+      }
+    },
+    {
+      "task_id": 20,
+      "task_type": "DB",
+      "cpu": 1.29,
+      "mem": 368.9,
+      "exec": 37.6,
+      "sens": 0.45,
+      "lqim": {
+        "node": 6,
+        "lat": 51.25,
+        "eng": 0.1653,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.45
+      },
+      "ga": {
+        "node": 0,
+        "lat": 54.22,
+        "eng": 0.1749,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.84
+      },
+      "pso": {
+        "node": 0,
+        "lat": 54.22,
+        "eng": 0.1749,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 30.14
+      }
+    },
+    {
+      "task_id": 21,
+      "task_type": "Health",
+      "cpu": 0.67,
+      "mem": 391.3,
+      "exec": 45.1,
+      "sens": 0.8,
+      "lqim": {
+        "node": 3,
+        "lat": 56.5,
+        "eng": 0.0946,
+        "util": 91.38,
+        "iters": 41,
+        "solve": 23.61
+      },
+      "ga": {
+        "node": 3,
+        "lat": 51.39,
+        "eng": 0.0861,
+        "util": 88.16,
+        "iters": 80,
+        "solve": 5.92
+      },
+      "pso": {
+        "node": 2,
+        "lat": 63.82,
+        "eng": 0.1069,
+        "util": 96.32,
+        "iters": 80,
+        "solve": 30.82
+      }
+    },
+    {
+      "task_id": 22,
+      "task_type": "IoT",
+      "cpu": 0.61,
+      "mem": 130.5,
+      "exec": 23.3,
+      "sens": 0.86,
+      "lqim": {
+        "node": 3,
+        "lat": 29.51,
+        "eng": 0.045,
+        "util": 91.67,
+        "iters": 38,
+        "solve": 15.19
+      },
+      "ga": {
+        "node": 3,
+        "lat": 26.83,
+        "eng": 0.0409,
+        "util": 88.64,
+        "iters": 80,
+        "solve": 5.48
+      },
+      "pso": {
+        "node": 2,
+        "lat": 31.89,
+        "eng": 0.0486,
+        "util": 93.73,
+        "iters": 80,
+        "solve": 30.59
+      }
+    },
+    {
+      "task_id": 23,
+      "task_type": "IoT",
+      "cpu": 0.38,
+      "mem": 73.7,
+      "exec": 10.2,
+      "sens": 0.89,
+      "lqim": {
+        "node": 3,
+        "lat": 9.12,
+        "eng": 0.0087,
+        "util": 85.24,
+        "iters": 38,
+        "solve": 19.1
+      },
+      "ga": {
+        "node": 3,
+        "lat": 8.82,
+        "eng": 0.0084,
+        "util": 84.29,
+        "iters": 80,
+        "solve": 5.66
+      },
+      "pso": {
+        "node": 2,
+        "lat": 9.55,
+        "eng": 0.0091,
+        "util": 79.61,
+        "iters": 80,
+        "solve": 31.23
+      }
+    },
+    {
+      "task_id": 24,
+      "task_type": "Camera",
+      "cpu": 1.97,
+      "mem": 528.6,
+      "exec": 50.5,
+      "sens": 0.73,
+      "lqim": {
+        "node": 4,
+        "lat": 57.74,
+        "eng": 0.2844,
+        "util": 89.87,
+        "iters": 38,
+        "solve": 16.06
+      },
+      "ga": {
+        "node": 4,
+        "lat": 57.74,
+        "eng": 0.2844,
+        "util": 89.87,
+        "iters": 80,
+        "solve": 5.96
+      },
+      "pso": {
+        "node": 4,
+        "lat": 57.74,
+        "eng": 0.2844,
+        "util": 89.87,
+        "iters": 80,
+        "solve": 39.97
+      }
+    },
+    {
+      "task_id": 25,
+      "task_type": "Camera",
+      "cpu": 1.81,
+      "mem": 452.3,
+      "exec": 31.9,
+      "sens": 0.81,
+      "lqim": {
+        "node": 9,
+        "lat": 44.79,
+        "eng": 0.2027,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.26
+      },
+      "ga": {
+        "node": 1,
+        "lat": 46.55,
+        "eng": 0.2106,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.88
+      },
+      "pso": {
+        "node": 1,
+        "lat": 43.78,
+        "eng": 0.1981,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 31.48
+      }
+    },
+    {
+      "task_id": 26,
+      "task_type": "DB",
+      "cpu": 1.04,
+      "mem": 511.5,
+      "exec": 93.6,
+      "sens": 0.3,
+      "lqim": {
+        "node": 7,
+        "lat": 109.18,
+        "eng": 0.2839,
+        "util": 96.75,
+        "iters": 38,
+        "solve": 15.83
+      },
+      "ga": {
+        "node": 7,
+        "lat": 108.07,
+        "eng": 0.281,
+        "util": 96.17,
+        "iters": 80,
+        "solve": 5.68
+      },
+      "pso": {
+        "node": 7,
+        "lat": 108.36,
+        "eng": 0.2817,
+        "util": 96.32,
+        "iters": 80,
+        "solve": 39.11
+      }
+    },
+    {
+      "task_id": 27,
+      "task_type": "Camera",
+      "cpu": 1.39,
+      "mem": 333.6,
+      "exec": 41.8,
+      "sens": 1.0,
+      "lqim": {
+        "node": 8,
+        "lat": 62.2,
+        "eng": 0.2161,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.99
+      },
+      "ga": {
+        "node": 8,
+        "lat": 59.12,
+        "eng": 0.2054,
+        "util": 97.41,
+        "iters": 80,
+        "solve": 5.85
+      },
+      "pso": {
+        "node": 8,
+        "lat": 56.18,
+        "eng": 0.1952,
+        "util": 94.52,
+        "iters": 80,
+        "solve": 30.34
+      }
+    },
+    {
+      "task_id": 28,
+      "task_type": "Camera",
+      "cpu": 1.09,
+      "mem": 372.3,
+      "exec": 54.0,
+      "sens": 0.72,
+      "lqim": {
+        "node": 7,
+        "lat": 77.05,
+        "eng": 0.21,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.33
+      },
+      "ga": {
+        "node": 0,
+        "lat": 76.81,
+        "eng": 0.2093,
+        "util": 98.87,
+        "iters": 80,
+        "solve": 9.59
+      },
+      "pso": {
+        "node": 0,
+        "lat": 74.19,
+        "eng": 0.2022,
+        "util": 97.15,
+        "iters": 80,
+        "solve": 30.31
+      }
+    },
+    {
+      "task_id": 29,
+      "task_type": "Health",
+      "cpu": 0.87,
+      "mem": 393.4,
+      "exec": 33.6,
+      "sens": 0.83,
+      "lqim": {
+        "node": 2,
+        "lat": 55.72,
+        "eng": 0.1212,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 14.91
+      },
+      "ga": {
+        "node": 5,
+        "lat": 46.12,
+        "eng": 0.1003,
+        "util": 95.42,
+        "iters": 80,
+        "solve": 5.63
+      },
+      "pso": {
+        "node": 3,
+        "lat": 52.8,
+        "eng": 0.1148,
+        "util": 98.58,
+        "iters": 80,
+        "solve": 30.24
+      }
+    },
+    {
+      "task_id": 30,
+      "task_type": "Health",
+      "cpu": 0.96,
+      "mem": 149.5,
+      "exec": 33.5,
+      "sens": 0.92,
+      "lqim": {
+        "node": 5,
+        "lat": 48.0,
+        "eng": 0.1152,
+        "util": 97.55,
+        "iters": 41,
+        "solve": 23.42
+      },
+      "ga": {
+        "node": 7,
+        "lat": 46.17,
+        "eng": 0.1108,
+        "util": 96.1,
+        "iters": 80,
+        "solve": 5.66
+      },
+      "pso": {
+        "node": 5,
+        "lat": 48.18,
+        "eng": 0.1156,
+        "util": 97.74,
+        "iters": 80,
+        "solve": 29.82
+      }
+    },
+    {
+      "task_id": 31,
+      "task_type": "DB",
+      "cpu": 1.43,
+      "mem": 502.1,
+      "exec": 112.8,
+      "sens": 0.59,
+      "lqim": {
+        "node": 4,
+        "lat": 93.65,
+        "eng": 0.3348,
+        "util": 70.71,
+        "iters": 38,
+        "solve": 15.18
+      },
+      "ga": {
+        "node": 4,
+        "lat": 96.98,
+        "eng": 0.3467,
+        "util": 72.83,
+        "iters": 80,
+        "solve": 5.71
+      },
+      "pso": {
+        "node": 4,
+        "lat": 99.21,
+        "eng": 0.3547,
+        "util": 74.2,
+        "iters": 80,
+        "solve": 40.39
+      }
+    },
+    {
+      "task_id": 32,
+      "task_type": "Health",
+      "cpu": 1.0,
+      "mem": 295.0,
+      "exec": 30.3,
+      "sens": 0.9,
+      "lqim": {
+        "node": 7,
+        "lat": 43.21,
+        "eng": 0.108,
+        "util": 98.81,
+        "iters": 38,
+        "solve": 14.89
+      },
+      "ga": {
+        "node": 7,
+        "lat": 48.2,
+        "eng": 0.1205,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.58
+      },
+      "pso": {
+        "node": 7,
+        "lat": 43.36,
+        "eng": 0.1084,
+        "util": 99.0,
+        "iters": 80,
+        "solve": 30.07
+      }
+    },
+    {
+      "task_id": 33,
+      "task_type": "IoT",
+      "cpu": 0.35,
+      "mem": 59.6,
+      "exec": 11.1,
+      "sens": 0.82,
+      "lqim": {
+        "node": 3,
+        "lat": 10.45,
+        "eng": 0.0091,
+        "util": 87.91,
+        "iters": 38,
+        "solve": 17.02
+      },
+      "ga": {
+        "node": 3,
+        "lat": 10.64,
+        "eng": 0.0093,
+        "util": 88.34,
+        "iters": 80,
+        "solve": 5.51
+      },
+      "pso": {
+        "node": 3,
+        "lat": 8.32,
+        "eng": 0.0073,
+        "util": 81.72,
+        "iters": 80,
+        "solve": 34.45
+      }
+    },
+    {
+      "task_id": 34,
+      "task_type": "Vehicle",
+      "cpu": 1.22,
+      "mem": 414.2,
+      "exec": 28.9,
+      "sens": 0.92,
+      "lqim": {
+        "node": 6,
+        "lat": 44.42,
+        "eng": 0.1355,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 14.94
+      },
+      "ga": {
+        "node": 6,
+        "lat": 46.11,
+        "eng": 0.1406,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.64
+      },
+      "pso": {
+        "node": 6,
+        "lat": 45.13,
+        "eng": 0.1376,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 30.99
+      }
+    },
+    {
+      "task_id": 35,
+      "task_type": "IoT",
+      "cpu": 0.72,
+      "mem": 60.6,
+      "exec": 21.9,
+      "sens": 0.87,
+      "lqim": {
+        "node": 2,
+        "lat": 31.9,
+        "eng": 0.0574,
+        "util": 97.43,
+        "iters": 38,
+        "solve": 14.98
+      },
+      "ga": {
+        "node": 2,
+        "lat": 30.88,
+        "eng": 0.0556,
+        "util": 95.89,
+        "iters": 80,
+        "solve": 5.64
+      },
+      "pso": {
+        "node": 3,
+        "lat": 40.39,
+        "eng": 0.0727,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 37.99
+      }
+    },
+    {
+      "task_id": 36,
+      "task_type": "DB",
+      "cpu": 1.04,
+      "mem": 489.3,
+      "exec": 135.9,
+      "sens": 0.53,
+      "lqim": {
+        "node": 4,
+        "lat": 83.9,
+        "eng": 0.2181,
+        "util": 57.58,
+        "iters": 38,
+        "solve": 14.98
+      },
+      "ga": {
+        "node": 4,
+        "lat": 86.57,
+        "eng": 0.2251,
+        "util": 59.46,
+        "iters": 80,
+        "solve": 5.74
+      },
+      "pso": {
+        "node": 4,
+        "lat": 89.08,
+        "eng": 0.2316,
+        "util": 61.14,
+        "iters": 80,
+        "solve": 29.66
+      }
+    },
+    {
+      "task_id": 37,
+      "task_type": "DB",
+      "cpu": 1.28,
+      "mem": 523.0,
+      "exec": 52.8,
+      "sens": 0.34,
+      "lqim": {
+        "node": 8,
+        "lat": 67.23,
+        "eng": 0.2151,
+        "util": 99.42,
+        "iters": 38,
+        "solve": 15.21
+      },
+      "ga": {
+        "node": 8,
+        "lat": 63.86,
+        "eng": 0.2044,
+        "util": 96.71,
+        "iters": 80,
+        "solve": 5.67
+      },
+      "pso": {
+        "node": 8,
+        "lat": 61.59,
+        "eng": 0.1971,
+        "util": 94.76,
+        "iters": 80,
+        "solve": 32.34
+      }
+    },
+    {
+      "task_id": 38,
+      "task_type": "Health",
+      "cpu": 0.55,
+      "mem": 223.3,
+      "exec": 45.2,
+      "sens": 0.81,
+      "lqim": {
+        "node": 2,
+        "lat": 52.3,
+        "eng": 0.0719,
+        "util": 86.74,
+        "iters": 38,
+        "solve": 15.62
+      },
+      "ga": {
+        "node": 2,
+        "lat": 53.43,
+        "eng": 0.0735,
+        "util": 87.7,
+        "iters": 80,
+        "solve": 6.0
+      },
+      "pso": {
+        "node": 2,
+        "lat": 66.85,
+        "eng": 0.0919,
+        "util": 97.05,
+        "iters": 80,
+        "solve": 34.5
+      }
+    },
+    {
+      "task_id": 39,
+      "task_type": "IoT",
+      "cpu": 0.24,
+      "mem": 159.2,
+      "exec": 50.0,
+      "sens": 0.64,
+      "lqim": {
+        "node": 3,
+        "lat": 37.51,
+        "eng": 0.0225,
+        "util": 87.61,
+        "iters": 38,
+        "solve": 35.43
+      },
+      "ga": {
+        "node": 3,
+        "lat": 40.63,
+        "eng": 0.0244,
+        "util": 89.23,
+        "iters": 80,
+        "solve": 10.66
+      },
+      "pso": {
+        "node": 3,
+        "lat": 31.94,
+        "eng": 0.0192,
+        "util": 83.99,
+        "iters": 80,
+        "solve": 51.25
+      }
+    },
+    {
+      "task_id": 40,
+      "task_type": "DB",
+      "cpu": 0.69,
+      "mem": 379.4,
+      "exec": 80.6,
+      "sens": 0.41,
+      "lqim": {
+        "node": 6,
+        "lat": 69.23,
+        "eng": 0.1194,
+        "util": 78.7,
+        "iters": 38,
+        "solve": 33.83
+      },
+      "ga": {
+        "node": 6,
+        "lat": 72.35,
+        "eng": 0.1248,
+        "util": 80.73,
+        "iters": 80,
+        "solve": 9.16
+      },
+      "pso": {
+        "node": 6,
+        "lat": 65.91,
+        "eng": 0.1137,
+        "util": 76.38,
+        "iters": 80,
+        "solve": 30.25
+      }
+    },
+    {
+      "task_id": 41,
+      "task_type": "DB",
+      "cpu": 1.37,
+      "mem": 230.2,
+      "exec": 127.0,
+      "sens": 0.64,
+      "lqim": {
+        "node": 4,
+        "lat": 113.13,
+        "eng": 0.3875,
+        "util": 74.37,
+        "iters": 38,
+        "solve": 15.34
+      },
+      "ga": {
+        "node": 4,
+        "lat": 121.38,
+        "eng": 0.4157,
+        "util": 78.42,
+        "iters": 80,
+        "solve": 5.8
+      },
+      "pso": {
+        "node": 4,
+        "lat": 124.62,
+        "eng": 0.4268,
+        "util": 79.9,
+        "iters": 80,
+        "solve": 41.91
+      }
+    },
+    {
+      "task_id": 42,
+      "task_type": "IoT",
+      "cpu": 0.23,
+      "mem": 199.9,
+      "exec": 51.8,
+      "sens": 0.99,
+      "lqim": {
+        "node": 3,
+        "lat": 47.57,
+        "eng": 0.0274,
+        "util": 90.32,
+        "iters": 38,
+        "solve": 14.79
+      },
+      "ga": {
+        "node": 3,
+        "lat": 48.88,
+        "eng": 0.0281,
+        "util": 90.81,
+        "iters": 80,
+        "solve": 5.57
+      },
+      "pso": {
+        "node": 3,
+        "lat": 42.83,
+        "eng": 0.0246,
+        "util": 88.31,
+        "iters": 80,
+        "solve": 29.27
+      }
+    },
+    {
+      "task_id": 43,
+      "task_type": "DB",
+      "cpu": 0.67,
+      "mem": 394.3,
+      "exec": 55.6,
+      "sens": 0.46,
+      "lqim": {
+        "node": 2,
+        "lat": 80.24,
+        "eng": 0.1344,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 15.15
+      },
+      "ga": {
+        "node": 6,
+        "lat": 53.13,
+        "eng": 0.089,
+        "util": 83.16,
+        "iters": 80,
+        "solve": 6.72
+      },
+      "pso": {
+        "node": 6,
+        "lat": 50.45,
+        "eng": 0.0845,
+        "util": 80.89,
+        "iters": 80,
+        "solve": 33.4
+      }
+    },
+    {
+      "task_id": 44,
+      "task_type": "IoT",
+      "cpu": 0.3,
+      "mem": 50.3,
+      "exec": 29.5,
+      "sens": 0.97,
+      "lqim": {
+        "node": 3,
+        "lat": 42.26,
+        "eng": 0.0317,
+        "util": 96.42,
+        "iters": 38,
+        "solve": 14.6
+      },
+      "ga": {
+        "node": 3,
+        "lat": 51.75,
+        "eng": 0.0388,
+        "util": 99.31,
+        "iters": 80,
+        "solve": 5.67
+      },
+      "pso": {
+        "node": 3,
+        "lat": 38.72,
+        "eng": 0.029,
+        "util": 95.01,
+        "iters": 80,
+        "solve": 28.51
+      }
+    },
+    {
+      "task_id": 45,
+      "task_type": "Health",
+      "cpu": 0.5,
+      "mem": 309.0,
+      "exec": 40.6,
+      "sens": 0.96,
+      "lqim": {
+        "node": 2,
+        "lat": 57.4,
+        "eng": 0.0718,
+        "util": 93.74,
+        "iters": 38,
+        "solve": 14.51
+      },
+      "ga": {
+        "node": 2,
+        "lat": 50.99,
+        "eng": 0.0637,
+        "util": 89.02,
+        "iters": 80,
+        "solve": 5.4
+      },
+      "pso": {
+        "node": 2,
+        "lat": 60.28,
+        "eng": 0.0753,
+        "util": 95.58,
+        "iters": 80,
+        "solve": 35.65
+      }
+    },
+    {
+      "task_id": 46,
+      "task_type": "Health",
+      "cpu": 0.41,
+      "mem": 189.0,
+      "exec": 48.9,
+      "sens": 0.92,
+      "lqim": {
+        "node": 2,
+        "lat": 59.75,
+        "eng": 0.0612,
+        "util": 89.08,
+        "iters": 38,
+        "solve": 14.41
+      },
+      "ga": {
+        "node": 2,
+        "lat": 53.03,
+        "eng": 0.0544,
+        "util": 84.53,
+        "iters": 80,
+        "solve": 5.58
+      },
+      "pso": {
+        "node": 2,
+        "lat": 63.63,
+        "eng": 0.0652,
+        "util": 91.34,
+        "iters": 80,
+        "solve": 28.43
+      }
+    },
+    {
+      "task_id": 47,
+      "task_type": "Vehicle",
+      "cpu": 1.06,
+      "mem": 462.7,
+      "exec": 11.5,
+      "sens": 0.95,
+      "lqim": {
+        "node": 7,
+        "lat": 18.36,
+        "eng": 0.0487,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 14.81
+      },
+      "ga": {
+        "node": 0,
+        "lat": 18.14,
+        "eng": 0.0481,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.61
+      },
+      "pso": {
+        "node": 0,
+        "lat": 17.31,
+        "eng": 0.0459,
+        "util": 98.64,
+        "iters": 80,
+        "solve": 34.44
+      }
+    },
+    {
+      "task_id": 48,
+      "task_type": "Vehicle",
+      "cpu": 1.16,
+      "mem": 592.2,
+      "exec": 12.4,
+      "sens": 0.92,
+      "lqim": {
+        "node": 0,
+        "lat": 18.83,
+        "eng": 0.0546,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 14.71
+      },
+      "ga": {
+        "node": 0,
+        "lat": 24.09,
+        "eng": 0.0699,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.57
+      },
+      "pso": {
+        "node": 0,
+        "lat": 21.74,
+        "eng": 0.0631,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 28.9
+      }
+    },
+    {
+      "task_id": 49,
+      "task_type": "Vehicle",
+      "cpu": 1.07,
+      "mem": 572.4,
+      "exec": 22.1,
+      "sens": 0.99,
+      "lqim": {
+        "node": 0,
+        "lat": 33.99,
+        "eng": 0.0909,
+        "util": 99.33,
+        "iters": 38,
+        "solve": 16.64
+      },
+      "ga": {
+        "node": 6,
+        "lat": 40.54,
+        "eng": 0.1084,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 12.5
+      },
+      "pso": {
+        "node": 7,
+        "lat": 38.52,
+        "eng": 0.103,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 31.17
+      }
+    },
+    {
+      "task_id": 50,
+      "task_type": "Vehicle",
+      "cpu": 1.25,
+      "mem": 518.9,
+      "exec": 28.6,
+      "sens": 0.94,
+      "lqim": {
+        "node": 8,
+        "lat": 45.67,
+        "eng": 0.1427,
+        "util": 100.0,
+        "iters": 38,
+        "solve": 14.73
+      },
+      "ga": {
+        "node": 8,
+        "lat": 43.36,
+        "eng": 0.1355,
+        "util": 100.0,
+        "iters": 80,
+        "solve": 5.66
+      },
+      "pso": {
+        "node": 8,
+        "lat": 39.89,
+        "eng": 0.1247,
+        "util": 95.96,
+        "iters": 80,
+        "solve": 31.72
+      }
+    }
+  ]
+}

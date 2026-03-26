@@ -4,28 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LQIM – Edge Scheduler Demo</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #f8f9fb;
+  --bg: #f5f6f8;
   --white: #ffffff;
-  --border: #e2e6ed;
-  --border2: #cdd3dc;
-  --text: #1a2332;
-  --muted: #6b7a8d;
-  --muted2: #9aa3af;
+  --border: #e1e5eb;
+  --border2: #c8ced8;
+  --text: #161b26;
+  --muted: #5f6d7e;
+  --muted2: #8e99a8;
   --accent: #2563eb;
   --accent-light: #eff4ff;
-  --accent-border: #bfcffd;
-  --green: #16a34a;
-  --green-light: #f0fdf4;
-  --green-border: #bbf7d0;
+  --accent-border: #b8cffd;
+  --green: #059669;
+  --green-light: #ecfdf5;
+  --green-border: #a7f3d0;
   --red: #dc2626;
   --red-light: #fef2f2;
-  --yellow: #d97706;
-  --yellow-light: #fffbeb;
-  --mono: 'Space Mono', monospace;
-  --sans: 'Inter', sans-serif;
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -33,50 +33,47 @@ body {
   color: var(--text);
   font-family: var(--sans);
   min-height: 100vh;
-  padding: 28px 16px 60px;
+  padding: 24px 16px 60px;
 }
-.page { max-width: 740px; margin: 0 auto; }
+.page { max-width: 760px; margin: 0 auto; }
 
-/* ── Header ── */
-.header { text-align: center; margin-bottom: 32px; }
-.header h1 { font-size: 1.5rem; font-weight: 600; color: var(--text); letter-spacing: -0.02em; }
-.header p  { font-size: 0.82rem; color: var(--muted); margin-top: 6px; }
-.header-badges { display: flex; gap: 8px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
+.header { text-align: center; margin-bottom: 28px; }
+.header h1 { font-size: 1.45rem; font-weight: 700; color: var(--text); letter-spacing: -0.03em; }
+.header p { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+.header-badges { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
 .hbadge {
-  font-family: var(--mono); font-size: 0.62rem; padding: 3px 10px;
+  font-family: var(--mono); font-size: 0.6rem; padding: 3px 10px;
   border-radius: 4px; border: 1px solid var(--border2); color: var(--muted);
   background: var(--white);
 }
 
-/* ── Block wrapper ── */
 .block {
   background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  margin-bottom: 16px;
+  border-radius: 12px;
+  margin-bottom: 14px;
   overflow: hidden;
 }
 .block-header {
   display: flex; align-items: center; gap: 10px;
-  padding: 14px 20px;
+  padding: 12px 18px;
   border-bottom: 1px solid var(--border);
   background: var(--bg);
 }
 .block-num {
-  width: 26px; height: 26px; border-radius: 50%;
+  width: 24px; height: 24px; border-radius: 50%;
   background: var(--accent); color: #fff;
-  font-size: 0.72rem; font-weight: 600;
+  font-size: 0.68rem; font-weight: 700;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
-.block-title { font-size: 0.9rem; font-weight: 600; color: var(--text); }
-.block-sub   { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
-.block-body  { padding: 20px; }
+.block-title { font-size: 0.85rem; font-weight: 600; }
+.block-sub { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+.block-body { padding: 18px; }
 
-/* ── Tabs ── */
-.tabs { display: flex; gap: 0; margin-bottom: 18px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.tabs { display: flex; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
 .tab {
-  flex: 1; padding: 9px 12px; font-size: 0.78rem; font-weight: 500;
+  flex: 1; padding: 8px 10px; font-size: 0.76rem; font-weight: 500;
   background: var(--white); color: var(--muted); border: none;
   cursor: pointer; transition: all 0.15s; border-right: 1px solid var(--border);
   font-family: var(--sans);
@@ -86,197 +83,154 @@ body {
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 
-/* ── Form ── */
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
-.form-group { display: flex; flex-direction: column; gap: 5px; }
-.form-group.full { grid-column: 1 / -1; }
-label { font-size: 0.72rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-input[type="number"], input[type="text"], select, textarea {
-  padding: 9px 12px; border: 1px solid var(--border2); border-radius: 7px;
-  font-size: 0.84rem; color: var(--text); background: var(--white);
-  font-family: var(--sans); outline: none; transition: border-color 0.15s;
-  width: 100%;
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+label { font-size: 0.7rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+select {
+  padding: 8px 10px; border: 1px solid var(--border2); border-radius: 6px;
+  font-size: 0.82rem; color: var(--text); background: var(--white);
+  font-family: var(--sans); outline: none;
 }
-input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
-.input-hint { font-size: 0.68rem; color: var(--muted2); margin-top: 2px; }
-
-.slider-wrap { display: flex; align-items: center; gap: 10px; }
+.slider-wrap { display: flex; align-items: center; gap: 8px; }
 input[type="range"] {
   flex: 1; height: 4px; border-radius: 2px;
   background: var(--border2); outline: none; border: none;
   -webkit-appearance: none; cursor: pointer;
 }
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 16px; height: 16px;
+  -webkit-appearance: none; width: 14px; height: 14px;
   border-radius: 50%; background: var(--accent);
   border: 2px solid #fff; box-shadow: 0 0 0 1px var(--accent);
-  cursor: pointer;
 }
-.slider-val { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); min-width: 44px; text-align: right; }
+.slider-val { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); min-width: 42px; text-align: right; }
 
-/* API section */
-.api-row { display: flex; gap: 8px; }
-.api-row input { flex: 1; }
-.api-btn { padding: 9px 16px; background: var(--accent-light); border: 1px solid var(--accent-border); color: var(--accent); border-radius: 7px; font-size: 0.78rem; font-weight: 500; cursor: pointer; white-space: nowrap; font-family: var(--sans); }
-.api-btn:hover { background: var(--accent); color: #fff; }
-
-.data-type-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.dtype-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
 .dtype-pill {
-  padding: 5px 12px; border-radius: 20px; font-size: 0.74rem; font-weight: 500;
+  padding: 5px 11px; border-radius: 18px; font-size: 0.72rem; font-weight: 500;
   border: 1px solid var(--border2); background: var(--white); color: var(--muted);
   cursor: pointer; transition: all 0.12s; font-family: var(--sans);
 }
 .dtype-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 .preview-box {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
-  padding: 12px 14px; font-family: var(--mono); font-size: 0.68rem;
-  color: var(--muted); line-height: 1.8; max-height: 110px; overflow-y: auto;
-  margin-top: 10px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 7px;
+  padding: 10px 12px; font-family: var(--mono); font-size: 0.66rem;
+  color: var(--muted); line-height: 1.7; max-height: 100px; overflow-y: auto;
+  margin-top: 8px;
 }
 
-/* ── Run Button ── */
 .run-btn {
-  width: 100%; padding: 13px; margin-top: 16px;
-  background: var(--accent); color: #fff; border: none; border-radius: 9px;
-  font-size: 0.84rem; font-weight: 600; cursor: pointer;
+  width: 100%; padding: 12px; margin-top: 14px;
+  background: var(--accent); color: #fff; border: none; border-radius: 8px;
+  font-size: 0.82rem; font-weight: 600; cursor: pointer;
   font-family: var(--sans); transition: opacity 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
 }
 .run-btn:hover { opacity: 0.88; }
-.run-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-/* ── Block 2: Processing ── */
+/* Processing */
 .pipeline { display: none; }
 .pipeline.show { display: block; }
 
-.pipe-track { position: relative; padding-left: 44px; }
+.pipe-track { position: relative; padding-left: 40px; }
 .pipe-track::before {
-  content: ''; position: absolute; left: 17px; top: 22px; bottom: 22px;
-  width: 1px; background: var(--border2); z-index: 0;
+  content: ''; position: absolute; left: 15px; top: 20px; bottom: 20px;
+  width: 1px; background: var(--border2);
 }
-.pipe-step { position: relative; z-index: 1; display: flex; align-items: flex-start; gap: 14px; padding: 8px 0; margin-left: -44px; }
+.pipe-step { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 6px 0; margin-left: -40px; }
 .pipe-dot {
-  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
   background: var(--white); border: 1.5px solid var(--border2);
   display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 0.6rem; color: var(--muted2);
+  font-family: var(--mono); font-size: 0.58rem; color: var(--muted2);
   transition: all 0.3s; position: relative;
 }
-.pipe-step.active .pipe-dot {
-  background: var(--accent-light); border-color: var(--accent);
-  color: var(--accent); font-weight: 700;
-}
-.pipe-step.done .pipe-dot {
-  background: var(--green-light); border-color: var(--green); color: var(--green);
-}
+.pipe-step.active .pipe-dot { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.pipe-step.done .pipe-dot { background: var(--green-light); border-color: var(--green); color: var(--green); }
 .pipe-step.active .pipe-dot::after {
-  content: ''; position: absolute; inset: -4px; border-radius: 50%;
+  content: ''; position: absolute; inset: -3px; border-radius: 50%;
   border: 1.5px solid var(--accent); border-top-color: transparent;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.7s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .pipe-step.done .pipe-dot::after { display: none; }
-
-.pipe-info { padding-top: 7px; flex: 1; }
-.pipe-name { font-size: 0.82rem; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.pipe-info { padding-top: 5px; flex: 1; }
+.pipe-name { font-size: 0.8rem; font-weight: 500; margin-bottom: 2px; }
 .pipe-step.active .pipe-name { color: var(--accent); }
-.pipe-desc { font-size: 0.72rem; color: var(--muted); line-height: 1.5; }
+.pipe-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.4; }
 
-/* Batch visualisation */
-.batch-vis { margin-top: 10px; }
-.batch-label { font-size: 0.68rem; color: var(--muted); margin-bottom: 6px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.06em; }
-.batch-grid { display: flex; flex-wrap: wrap; gap: 3px; }
-.batch-dot {
-  width: 14px; height: 14px; border-radius: 3px;
-  background: var(--border); transition: all 0.2s;
-}
-.batch-dot.queued   { background: var(--yellow-light); border: 1px solid #fcd34d; }
-.batch-dot.active   { background: var(--accent-light); border: 1px solid var(--accent); }
-.batch-dot.done     { background: var(--green-light); border: 1px solid var(--green-border); }
-
-/* Q-bit row */
-.qbit-row { display: flex; gap: 4px; margin-top: 8px; flex-wrap: wrap; }
+.qbit-row { display: flex; gap: 3px; margin-top: 6px; flex-wrap: wrap; }
 .qb {
-  width: 20px; height: 20px; border-radius: 4px;
+  width: 18px; height: 18px; border-radius: 3px;
   background: var(--bg); border: 1px solid var(--border2);
-  font-family: var(--mono); font-size: 0.55rem; color: var(--muted2);
+  font-family: var(--mono); font-size: 0.5rem; color: var(--muted2);
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.qb.sup  { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
+.qb.sup { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
 .qb.best { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 700; }
 
-.iter-bar-wrap { margin-top: 10px; }
-.iter-bar-label { display: flex; justify-content: space-between; font-size: 0.68rem; color: var(--muted); margin-bottom: 5px; font-family: var(--mono); }
-.iter-bar-bg { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.iter-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; width: 0%; transition: width 0.2s; }
+.iter-bar-wrap { margin-top: 8px; }
+.iter-bar-label { display: flex; justify-content: space-between; font-size: 0.66rem; color: var(--muted); margin-bottom: 4px; font-family: var(--mono); }
+.iter-bar-bg { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.iter-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; width: 0%; transition: width 0.15s; }
 
 .terminal {
-  background: #0f1923; border-radius: 8px; padding: 12px 14px;
-  font-family: var(--mono); font-size: 0.68rem; line-height: 1.9;
-  max-height: 150px; overflow-y: auto; margin-top: 14px; color: #64748b;
+  background: #0d1520; border-radius: 7px; padding: 10px 12px;
+  font-family: var(--mono); font-size: 0.64rem; line-height: 1.8;
+  max-height: 130px; overflow-y: auto; margin-top: 12px; color: #64748b;
 }
-.terminal::-webkit-scrollbar { width: 4px; }
+.terminal::-webkit-scrollbar { width: 3px; }
 .terminal::-webkit-scrollbar-thumb { background: #2a3f5f; border-radius: 2px; }
-.tl { animation: fl 0.2s ease; }
+.tl { animation: fl 0.15s ease; }
 @keyframes fl { from{opacity:0;transform:translateY(2px)} to{opacity:1;transform:none} }
-.tc  { color: #94a3b8; }
-.tp  { color: #60a5fa; }
-.tok { color: #4ade80; }
-.tw  { color: #fbbf24; }
+.tc { color: #94a3b8; } .tp { color: #60a5fa; } .tok { color: #4ade80; } .tw { color: #fbbf24; }
 
-/* ── Block 3: Output ── */
+/* Output */
 .output-section { display: none; }
 .output-section.show { display: block; }
 
 .result-banner {
   background: var(--green-light); border: 1px solid var(--green-border);
-  border-radius: 10px; padding: 14px 16px; margin-bottom: 16px;
-  display: flex; align-items: center; gap: 12px;
+  border-radius: 8px; padding: 12px 14px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
 }
-.result-banner-icon { font-size: 1.4rem; }
-.result-banner-title { font-size: 0.88rem; font-weight: 600; color: var(--green); }
-.result-banner-sub { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+.result-banner-icon { font-size: 1.2rem; }
+.result-banner-title { font-size: 0.84rem; font-weight: 600; color: var(--green); }
+.result-banner-sub { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
 
-/* Speed comparison — THE main output */
-.speed-compare { margin-bottom: 18px; }
-.sc-title { font-size: 0.72rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
-.sc-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
-.sc-method { font-size: 0.78rem; font-weight: 500; width: 90px; flex-shrink: 0; }
-.sc-bar-wrap { flex: 1; position: relative; }
-.sc-bar-bg { height: 28px; background: var(--bg); border-radius: 6px; border: 1px solid var(--border); overflow: hidden; position: relative; }
-.sc-bar-fill { height: 100%; border-radius: 5px; display: flex; align-items: center; padding-left: 10px; font-family: var(--mono); font-size: 0.68rem; font-weight: 700; color: #fff; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); white-space: nowrap; }
-.sc-val { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); width: 54px; text-align: right; flex-shrink: 0; }
-.sc-improvement { font-size: 0.7rem; color: var(--green); font-weight: 500; width: 60px; text-align: right; flex-shrink: 0; }
-
-/* Metric cards */
-.metrics-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
-.m-card { border: 1px solid var(--border); border-radius: 10px; padding: 14px 12px; text-align: center; }
-.m-label { font-size: 0.65rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 6px; }
-.m-val { font-size: 1.3rem; font-weight: 600; line-height: 1; }
-.m-unit { font-size: 0.65rem; color: var(--muted2); margin-top: 4px; font-family: var(--mono); }
+.metrics-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+.m-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px 10px; text-align: center; }
+.m-label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
+.m-val { font-size: 1.2rem; font-weight: 700; line-height: 1; }
+.m-unit { font-size: 0.62rem; color: var(--muted2); margin-top: 3px; font-family: var(--mono); }
 .m-card.lat { border-color: var(--accent-border); background: var(--accent-light); }
 .m-card.lat .m-val { color: var(--accent); }
 .m-card.eng { border-color: #fcd34d; background: #fffbeb; }
-.m-card.eng .m-val { color: var(--yellow); }
+.m-card.eng .m-val { color: var(--amber); }
 .m-card.lod { border-color: var(--green-border); background: var(--green-light); }
 .m-card.lod .m-val { color: var(--green); }
 
-/* Node bars */
-.node-bars-title { font-size: 0.72rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
-.nb-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-.nb-id { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); width: 44px; flex-shrink: 0; }
-.nb-track { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
-.nb-fill { height: 100%; border-radius: 4px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
-.nb-pct { font-family: var(--mono); font-size: 0.62rem; color: var(--muted); width: 32px; text-align: right; flex-shrink: 0; }
-.nb-row.winner .nb-id { color: var(--accent); font-weight: 700; }
-.nb-row.winner .nb-pct { color: var(--accent); font-weight: 700; }
+.sc-title { font-size: 0.7rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+.sc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.sc-method { font-size: 0.76rem; font-weight: 500; width: 46px; flex-shrink: 0; }
+.sc-bar-bg { flex: 1; height: 26px; background: var(--bg); border-radius: 5px; border: 1px solid var(--border); overflow: hidden; }
+.sc-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-family: var(--mono); font-size: 0.64rem; font-weight: 700; color: #fff; transition: width 1s cubic-bezier(0.4,0,0.2,1); white-space: nowrap; }
+.sc-val { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); width: 50px; text-align: right; flex-shrink: 0; }
+.sc-tag { font-size: 0.66rem; font-weight: 500; width: 70px; text-align: right; flex-shrink: 0; }
+
+.nb-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.nb-id { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); width: 40px; flex-shrink: 0; }
+.nb-track { flex: 1; height: 7px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.nb-fill { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+.nb-pct { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); width: 28px; text-align: right; flex-shrink: 0; }
+.nb-row.winner .nb-id, .nb-row.winner .nb-pct { color: var(--accent); font-weight: 700; }
 
 .reset-btn {
-  width: 100%; padding: 10px; margin-top: 14px;
+  width: 100%; padding: 9px; margin-top: 12px;
   background: transparent; border: 1px solid var(--border2); color: var(--muted);
-  border-radius: 8px; font-size: 0.78rem; cursor: pointer; font-family: var(--sans);
+  border-radius: 7px; font-size: 0.76rem; cursor: pointer; font-family: var(--sans);
 }
 .reset-btn:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -289,43 +243,36 @@ input[type="range"]::-webkit-slider-thumb {
 <body>
 <div class="page">
 
-  <!-- Header -->
   <div class="header">
     <h1>LQIM Edge Task Scheduler</h1>
     <p>Lightweight Quantum-Inspired Metaheuristic · Karpagam Institute of Technology</p>
     <div class="header-badges">
       <span class="hbadge">10 Edge Nodes</span>
-      <span class="hbadge">IoT + DB + Camera</span>
+      <span class="hbadge">5 Task Types</span>
       <span class="hbadge">LQIM vs GA vs PSO</span>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       BLOCK 1 — INPUT
-  ══════════════════════════════════════ -->
+  <!-- BLOCK 1 — INPUT -->
   <div class="block">
     <div class="block-header">
       <div class="block-num">1</div>
       <div class="block-title">Task Input</div>
-      <div class="block-sub">Manual · API · Preset</div>
+      <div class="block-sub">Manual · Preset</div>
     </div>
     <div class="block-body">
-
-      <!-- Input mode tabs -->
       <div class="tabs">
-        <button class="tab active" onclick="switchTab('manual')">✎ Manual Input</button>
-        <button class="tab" onclick="switchTab('api')">⚡ API / Live Feed</button>
-        <button class="tab" onclick="switchTab('preset')">📦 Preset Tasks</button>
+        <button class="tab active" onclick="switchTab('manual')">Manual Input</button>
+        <button class="tab" onclick="switchTab('preset')">Preset Scenarios</button>
       </div>
 
-      <!-- MANUAL TAB -->
       <div class="tab-panel active" id="tab-manual">
         <div class="form-row">
           <div class="form-group">
             <label>CPU Demand</label>
             <div class="slider-wrap">
               <input type="range" id="cpuSlider" min="0.2" max="2.0" step="0.1" value="0.8"
-                oninput="sv('cpuVal', (+this.value).toFixed(1)+' GHz')">
+                oninput="sv('cpuVal',(+this.value).toFixed(1)+' GHz')">
               <span class="slider-val" id="cpuVal">0.8 GHz</span>
             </div>
           </div>
@@ -333,7 +280,7 @@ input[type="range"]::-webkit-slider-thumb {
             <label>Memory Required</label>
             <div class="slider-wrap">
               <input type="range" id="memSlider" min="50" max="600" step="10" value="200"
-                oninput="sv('memVal', this.value+' MB')">
+                oninput="sv('memVal',this.value+' MB')">
               <span class="slider-val" id="memVal">200 MB</span>
             </div>
           </div>
@@ -341,7 +288,7 @@ input[type="range"]::-webkit-slider-thumb {
             <label>Execution Time</label>
             <div class="slider-wrap">
               <input type="range" id="execSlider" min="10" max="200" step="5" value="60"
-                oninput="sv('execVal', this.value+' ms')">
+                oninput="sv('execVal',this.value+' ms')">
               <span class="slider-val" id="execVal">60 ms</span>
             </div>
           </div>
@@ -349,7 +296,7 @@ input[type="range"]::-webkit-slider-thumb {
             <label>Latency Sensitivity</label>
             <div class="slider-wrap">
               <input type="range" id="sensSlider" min="0.1" max="1.0" step="0.1" value="0.7"
-                oninput="sv('sensVal', (+this.value).toFixed(1))">
+                oninput="sv('sensVal',(+this.value).toFixed(1))">
               <span class="slider-val" id="sensVal">0.7</span>
             </div>
           </div>
@@ -358,82 +305,39 @@ input[type="range"]::-webkit-slider-thumb {
           <div class="form-group">
             <label>Task Type</label>
             <select id="taskType">
-              <option value="iot">IoT Sensor Reading</option>
-              <option value="db">DB Record Retrieval</option>
-              <option value="camera">Live Camera Frame</option>
-              <option value="health">Health Monitor Data</option>
-              <option value="custom">Custom</option>
+              <option value="IoT">IoT Sensor</option>
+              <option value="DB">DB Query</option>
+              <option value="Camera" selected>Camera Frame</option>
+              <option value="Health">Health Monitor</option>
+              <option value="Vehicle">Vehicle LIDAR</option>
             </select>
           </div>
-          <div class="form-group">
-            <label>Batch Size</label>
-            <div class="slider-wrap">
-              <input type="range" id="batchSlider" min="1" max="20" step="1" value="1"
-                oninput="sv('batchVal', this.value+' task'+(this.value>1?'s':''))">
-              <span class="slider-val" id="batchVal">1 task</span>
-            </div>
-          </div>
         </div>
       </div>
 
-      <!-- API TAB -->
-      <div class="tab-panel" id="tab-api">
-        <div class="form-group" style="margin-bottom:12px">
-          <label>Data Source Type</label>
-          <div class="data-type-pills">
-            <button class="dtype-pill active" onclick="setDtype(this,'iot')">📡 IoT Sensor</button>
-            <button class="dtype-pill" onclick="setDtype(this,'db')">🗄️ DB Query</button>
-            <button class="dtype-pill" onclick="setDtype(this,'camera')">🎥 Camera Feed</button>
-            <button class="dtype-pill" onclick="setDtype(this,'health')">🏥 Health Monitor</button>
-          </div>
-        </div>
-        <div class="form-group" style="margin-bottom:12px">
-          <label>API Endpoint / URL</label>
-          <div class="api-row">
-            <input type="text" id="apiUrl" placeholder="https://your-api.com/tasks  or  mqtt://broker:1883/sensors" value="https://api.example.com/iot/tasks">
-            <button class="api-btn" onclick="fetchFromAPI()">Fetch</button>
-          </div>
-          <div class="input-hint">Supports REST (GET), MQTT topics, Frappe /api/resource/IoT Task</div>
-        </div>
-        <div class="form-group" style="margin-bottom:0">
-          <label>Or paste JSON data directly</label>
-          <textarea id="jsonInput" rows="3" placeholder='{"cpu_demand":0.8,"memory_mb":200,"exec_time_ms":60,"latency_sensitivity":0.7}'></textarea>
-        </div>
-        <div class="preview-box" id="apiPreview">// Fetched data will appear here...</div>
-      </div>
-
-      <!-- PRESET TAB -->
       <div class="tab-panel" id="tab-preset">
-        <div class="form-group" style="margin-bottom:10px">
+        <div class="form-group" style="margin-bottom:8px">
           <label>Choose a real-world scenario</label>
-          <div class="data-type-pills" style="margin-top:6px">
-            <button class="dtype-pill active" onclick="loadPreset(this,'iot_factory')">🏭 Factory IoT</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'db_erp')">🗄️ ERP DB Query</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'cctv')">📷 CCTV Frame</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'health')">💊 Patient Monitor</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'vehicle')">🚗 Vehicle LIDAR</button>
+          <div class="dtype-pills" style="margin-top:6px">
+            <button class="dtype-pill active" onclick="loadPreset(this,'iot')">Factory IoT</button>
+            <button class="dtype-pill" onclick="loadPreset(this,'db')">ERP DB Query</button>
+            <button class="dtype-pill" onclick="loadPreset(this,'camera')">CCTV Frame</button>
+            <button class="dtype-pill" onclick="loadPreset(this,'health')">Patient Monitor</button>
+            <button class="dtype-pill" onclick="loadPreset(this,'vehicle')">Vehicle LIDAR</button>
           </div>
         </div>
-        <div class="preview-box" id="presetPreview">
-cpu_demand     : 0.40 GHz
-memory_mb      : 120 MB
-exec_time_ms   : 35 ms
-latency_sens   : 0.85
-task_type      : IoT Sensor Reading
-batch_size     : 5 tasks
-source         : Temperature + Vibration sensors
-scenario       : Factory floor monitoring</div>
+        <div class="preview-box" id="presetPreview">cpu: 0.40 GHz  mem: 120 MB  exec: 35 ms  sens: 0.85
+type: IoT Sensor  source: Temperature + Vibration sensors
+scenario: Factory floor monitoring — real-time anomaly detection</div>
       </div>
 
       <button class="run-btn" id="runBtn" onclick="startSchedule()">
-        ▶ &nbsp; Run LQIM Scheduler
+        ▶ Run LQIM Scheduler
       </button>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       BLOCK 2 — PROCESSING
-  ══════════════════════════════════════ -->
+  <!-- BLOCK 2 — PROCESSING -->
   <div class="block pipeline" id="block2">
     <div class="block-header">
       <div class="block-num">2</div>
@@ -441,579 +345,556 @@ scenario       : Factory floor monitoring</div>
       <div class="block-sub" id="procSubtitle">Running…</div>
     </div>
     <div class="block-body">
-
-      <!-- Batch visualisation -->
-      <div style="margin-bottom:18px">
-        <div class="batch-label">Task batch queue</div>
-        <div class="batch-grid" id="batchGrid"></div>
-      </div>
-
-      <!-- Steps -->
       <div class="pipe-track" id="pipeTrack">
-        <div class="pipe-step" id="ps0">
-          <div class="pipe-dot" id="pd0">01</div>
+        <div class="pipe-step" id="ps0"><div class="pipe-dot" id="pd0">01</div>
           <div class="pipe-info">
             <div class="pipe-name">Initialise Q-bit Population</div>
             <div class="pipe-desc">30 individuals × 10 nodes · α = β = 1/√2</div>
             <div class="qbit-row" id="qbitRow"></div>
           </div>
         </div>
-        <div class="pipe-step" id="ps1">
-          <div class="pipe-dot" id="pd1">02</div>
-          <div class="pipe-info">
-            <div class="pipe-name">Measure → Generate Candidates</div>
-            <div class="pipe-desc">Collapsing each Q-bit by probability β² to pick node assignments</div>
-          </div>
+        <div class="pipe-step" id="ps1"><div class="pipe-dot" id="pd1">02</div>
+          <div class="pipe-info"><div class="pipe-name">Measure → Candidate Assignments</div>
+            <div class="pipe-desc">Collapse Q-bits by probability β² to select nodes</div></div>
         </div>
-        <div class="pipe-step" id="ps2">
-          <div class="pipe-dot" id="pd2">03</div>
-          <div class="pipe-info">
-            <div class="pipe-name">Compute Fitness F for All 30 Candidates</div>
-            <div class="pipe-desc">F = 0.4·Latency + 0.35·Energy + 0.25·(1 − Utilisation)</div>
-          </div>
+        <div class="pipe-step" id="ps2"><div class="pipe-dot" id="pd2">03</div>
+          <div class="pipe-info"><div class="pipe-name">Compute Fitness F</div>
+            <div class="pipe-desc">F = 0.4·Latency + 0.35·Energy + 0.25·(1 − Utilisation)</div></div>
         </div>
-        <div class="pipe-step" id="ps3">
-          <div class="pipe-dot" id="pd3">04</div>
-          <div class="pipe-info">
-            <div class="pipe-name">Update Global Best</div>
-            <div class="pipe-desc" id="bestDesc">Tracking lowest-fitness node assignment found so far</div>
-          </div>
+        <div class="pipe-step" id="ps3"><div class="pipe-dot" id="pd3">04</div>
+          <div class="pipe-info"><div class="pipe-name">Update Global Best</div>
+            <div class="pipe-desc" id="bestDesc">Track lowest-fitness assignment</div></div>
         </div>
-        <div class="pipe-step" id="ps4">
-          <div class="pipe-dot" id="pd4">05</div>
-          <div class="pipe-info">
-            <div class="pipe-name">Rotation Gate Update  Δθ</div>
-            <div class="pipe-desc">Steering Q-bits toward best node · θ_new = θ_old + Δθ</div>
-            <div class="iter-bar-wrap" id="iterBarWrap">
-              <div class="iter-bar-label">
-                <span id="iterLabel">Iteration 0 / 80</span>
-                <span id="iterPct">0%</span>
-              </div>
+        <div class="pipe-step" id="ps4"><div class="pipe-dot" id="pd4">05</div>
+          <div class="pipe-info"><div class="pipe-name">Rotation Gate Update Δθ</div>
+            <div class="pipe-desc">Steer Q-bits toward best node · adaptive step</div>
+            <div class="iter-bar-wrap">
+              <div class="iter-bar-label"><span id="iterLabel">Iteration 0 / 80</span><span id="iterPct">0%</span></div>
               <div class="iter-bar-bg"><div class="iter-bar-fill" id="iterFill"></div></div>
             </div>
           </div>
         </div>
-        <div class="pipe-step" id="ps5">
-          <div class="pipe-dot" id="pd5">06</div>
-          <div class="pipe-info">
-            <div class="pipe-name">Convergence Check</div>
-            <div class="pipe-desc" id="convDesc">β² &gt; 0.92 across population → converged</div>
-          </div>
+        <div class="pipe-step" id="ps5"><div class="pipe-dot" id="pd5">06</div>
+          <div class="pipe-info"><div class="pipe-name">Convergence Check</div>
+            <div class="pipe-desc" id="convDesc">β² > 0.92 → converged (early stop)</div></div>
         </div>
-        <div class="pipe-step" id="ps6">
-          <div class="pipe-dot" id="pd6">07</div>
-          <div class="pipe-info">
-            <div class="pipe-name">Execute Schedule Decision</div>
-            <div class="pipe-desc">Dispatching task batch to optimal edge node</div>
-          </div>
+        <div class="pipe-step" id="ps6"><div class="pipe-dot" id="pd6">07</div>
+          <div class="pipe-info"><div class="pipe-name">Execute Schedule + Run Baselines</div>
+            <div class="pipe-desc">Dispatch task; run GA and PSO for comparison</div></div>
         </div>
       </div>
-
-      <!-- Terminal log -->
       <div class="terminal" id="termLog"></div>
     </div>
   </div>
 
-  <!-- ══════════════════════════════════════
-       BLOCK 3 — OUTPUT + COMPARISON
-  ══════════════════════════════════════ -->
+  <!-- BLOCK 3 — OUTPUT -->
   <div class="block output-section" id="block3">
     <div class="block-header">
       <div class="block-num">3</div>
-      <div class="block-title">Result + Speed Comparison</div>
+      <div class="block-title">Result + Comparison</div>
       <div class="block-sub">LQIM vs GA vs PSO</div>
     </div>
     <div class="block-body">
-
-      <!-- Result banner -->
       <div class="result-banner">
         <div class="result-banner-icon">✓</div>
         <div>
-          <div class="result-banner-title" id="bannerTitle">Task scheduled successfully</div>
-          <div class="result-banner-sub" id="bannerSub">Assigned to Node-04 · Converged in 38 iterations</div>
+          <div class="result-banner-title" id="bannerTitle">Scheduled</div>
+          <div class="result-banner-sub" id="bannerSub"></div>
         </div>
       </div>
 
-      <!-- 3 metric cards -->
       <div class="metrics-3">
-        <div class="m-card lat">
-          <div class="m-label">Latency</div>
-          <div class="m-val" id="oLat">—</div>
-          <div class="m-unit">milliseconds</div>
-        </div>
-        <div class="m-card eng">
-          <div class="m-label">Energy</div>
-          <div class="m-val" id="oEng">—</div>
-          <div class="m-unit">joules</div>
-        </div>
-        <div class="m-card lod">
-          <div class="m-label">Node Load</div>
-          <div class="m-val" id="oLoad">—</div>
-          <div class="m-unit">% utilised</div>
-        </div>
+        <div class="m-card lat"><div class="m-label">Latency</div><div class="m-val" id="oLat">—</div><div class="m-unit">milliseconds</div></div>
+        <div class="m-card eng"><div class="m-label">Energy</div><div class="m-val" id="oEng">—</div><div class="m-unit">joules</div></div>
+        <div class="m-card lod"><div class="m-label">Node Load</div><div class="m-val" id="oLoad">—</div><div class="m-unit">% utilised</div></div>
       </div>
 
-      <!-- SPEED COMPARISON — main section -->
-      <div class="speed-compare">
-        <div class="sc-title">Algorithm speed comparison — same task, 3 methods</div>
-
+      <!-- Iteration comparison -->
+      <div style="margin-bottom:16px">
+        <div class="sc-title">Convergence speed — iterations used (fewer = faster)</div>
         <div class="sc-row">
           <div class="sc-method" style="color:var(--accent);font-weight:600">LQIM</div>
-          <div class="sc-bar-wrap">
-            <div class="sc-bar-bg">
-              <div class="sc-bar-fill" id="barLQIM" style="background:var(--accent);width:0%"></div>
-            </div>
-          </div>
+          <div class="sc-bar-bg"><div class="sc-bar-fill" id="barLQIM" style="background:var(--accent);width:0%"></div></div>
           <div class="sc-val" id="valLQIM">—</div>
-          <div class="sc-improvement" id="impLQIM"></div>
+          <div class="sc-tag" id="tagLQIM" style="color:var(--green)"></div>
         </div>
-
         <div class="sc-row">
-          <div class="sc-method" style="color:#d97706">GA</div>
-          <div class="sc-bar-wrap">
-            <div class="sc-bar-bg">
-              <div class="sc-bar-fill" id="barGA" style="background:#d97706;width:0%"></div>
-            </div>
-          </div>
+          <div class="sc-method" style="color:var(--amber)">GA</div>
+          <div class="sc-bar-bg"><div class="sc-bar-fill" id="barGA" style="background:var(--amber);width:0%"></div></div>
           <div class="sc-val" id="valGA">—</div>
-          <div class="sc-improvement" id="impGA"></div>
+          <div class="sc-tag" id="tagGA"></div>
         </div>
-
         <div class="sc-row">
-          <div class="sc-method" style="color:#dc2626">PSO</div>
-          <div class="sc-bar-wrap">
-            <div class="sc-bar-bg">
-              <div class="sc-bar-fill" id="barPSO" style="background:#dc2626;width:0%"></div>
-            </div>
-          </div>
+          <div class="sc-method" style="color:var(--red)">PSO</div>
+          <div class="sc-bar-bg"><div class="sc-bar-fill" id="barPSO" style="background:var(--red);width:0%"></div></div>
           <div class="sc-val" id="valPSO">—</div>
-          <div class="sc-improvement" id="impPSO"></div>
+          <div class="sc-tag" id="tagPSO"></div>
         </div>
+      </div>
 
-        <!-- Latency comparison bars -->
-        <div style="margin-top:16px">
-          <div class="sc-title">Latency comparison (ms) — lower is better</div>
-          <div class="sc-row">
-            <div class="sc-method" style="color:var(--accent);font-weight:600">LQIM</div>
-            <div class="sc-bar-wrap">
-              <div class="sc-bar-bg">
-                <div class="sc-bar-fill" id="latBarLQIM" style="background:var(--accent);width:0%"></div>
-              </div>
-            </div>
-            <div class="sc-val" id="latValLQIM">—</div>
-            <div class="sc-improvement" id="latImpLQIM" style="color:var(--green)"></div>
-          </div>
-          <div class="sc-row">
-            <div class="sc-method" style="color:#d97706">GA</div>
-            <div class="sc-bar-wrap">
-              <div class="sc-bar-bg">
-                <div class="sc-bar-fill" id="latBarGA" style="background:#d97706;width:0%"></div>
-              </div>
-            </div>
-            <div class="sc-val" id="latValGA">—</div>
-            <div class="sc-improvement"></div>
-          </div>
-          <div class="sc-row">
-            <div class="sc-method" style="color:#dc2626">PSO</div>
-            <div class="sc-bar-wrap">
-              <div class="sc-bar-bg">
-                <div class="sc-bar-fill" id="latBarPSO" style="background:#dc2626;width:0%"></div>
-              </div>
-            </div>
-            <div class="sc-val" id="latValPSO">—</div>
-            <div class="sc-improvement"></div>
-          </div>
+      <!-- Latency comparison -->
+      <div style="margin-bottom:16px">
+        <div class="sc-title">Task latency — ms (lower = better)</div>
+        <div class="sc-row">
+          <div class="sc-method" style="color:var(--accent);font-weight:600">LQIM</div>
+          <div class="sc-bar-bg"><div class="sc-bar-fill" id="latBarLQIM" style="background:var(--accent);width:0%"></div></div>
+          <div class="sc-val" id="latValLQIM">—</div>
+          <div class="sc-tag" id="latTagLQIM" style="color:var(--green)"></div>
+        </div>
+        <div class="sc-row">
+          <div class="sc-method" style="color:var(--amber)">GA</div>
+          <div class="sc-bar-bg"><div class="sc-bar-fill" id="latBarGA" style="background:var(--amber);width:0%"></div></div>
+          <div class="sc-val" id="latValGA">—</div>
+          <div class="sc-tag" id="latTagGA"></div>
+        </div>
+        <div class="sc-row">
+          <div class="sc-method" style="color:var(--red)">PSO</div>
+          <div class="sc-bar-bg"><div class="sc-bar-fill" id="latBarPSO" style="background:var(--red);width:0%"></div></div>
+          <div class="sc-val" id="latValPSO">—</div>
+          <div class="sc-tag" id="latTagPSO"></div>
         </div>
       </div>
 
       <!-- Node load bars -->
-      <div>
-        <div class="node-bars-title">Edge node load after assignment</div>
-        <div id="nodeBars"></div>
-      </div>
+      <div class="sc-title">Edge node load distribution</div>
+      <div id="nodeBars"></div>
 
-      <button class="reset-btn" onclick="resetAll()">⌫ &nbsp; Schedule Another Task</button>
+      <button class="reset-btn" onclick="resetAll()">Reset & Schedule Another Task</button>
     </div>
   </div>
 
-</div><!-- /page -->
+</div>
 
 <script>
-// ── Nodes ──
+// ══════════════════════════════════════════════════════════
+//  EDGE NODES — matches backend/lqim.py build_nodes()
+// ══════════════════════════════════════════════════════════
 const NODES = [
-  {id:0,cpu:1.80,ram:1, load:34},
-  {id:1,cpu:2.16,ram:1, load:11},
-  {id:2,cpu:1.29,ram:4, load:29},
-  {id:3,cpu:2.33,ram:2, load:44},
-  {id:4,cpu:2.53,ram:2, load:12},
-  {id:5,cpu:1.49,ram:2, load:26},
-  {id:6,cpu:1.89,ram:1, load:29},
-  {id:7,cpu:1.42,ram:1, load:20},
-  {id:8,cpu:1.93,ram:8, load:13},
-  {id:9,cpu:2.02,ram:1, load: 7}
+  {id:0,cpu:1.80,ram:2,load:34,energy:192.6},
+  {id:1,cpu:2.16,ram:4,load:11,energy:73.4},
+  {id:2,cpu:1.29,ram:4,load:29,energy:179.9},
+  {id:3,cpu:2.33,ram:2,load:44,energy:53.1},
+  {id:4,cpu:2.53,ram:4,load:12,energy:81.9},
+  {id:5,cpu:1.49,ram:2,load:26,energy:95.6},
+  {id:6,cpu:1.89,ram:2,load:29,energy:93.7},
+  {id:7,cpu:1.42,ram:1,load:20,energy:93.8},
+  {id:8,cpu:1.93,ram:8,load:13,energy:167.8},
+  {id:9,cpu:2.02,ram:2,load:7,energy:138.9},
 ];
-let liveLoads = NODES.map(n=>n.load);
+let liveLoads = NODES.map(n => n.load);
 let taskCount = 0;
-let currentTab = 'manual';
-let currentDtype = 'iot';
-let currentPreset = 'iot_factory';
 
 const PRESETS = {
-  iot_factory:  {cpu:0.40,mem:120, exec:35, sens:0.85, type:'IoT Sensor Reading',    batch:5, src:'Temperature + Vibration sensors', scene:'Factory floor monitoring'},
-  db_erp:       {cpu:1.20,mem:450, exec:180,sens:0.50, type:'DB Record Retrieval',    batch:1, src:'ERPNext — 1 lakh records query',  scene:'ERP reporting module'},
-  cctv:         {cpu:1.80,mem:520, exec:95, sens:0.90, type:'Live Camera Frame',      batch:3, src:'CCTV camera at 30fps',             scene:'Smart city surveillance'},
-  health:       {cpu:0.35,mem:80,  exec:22, sens:1.00, type:'Health Monitor Data',    batch:8, src:'ECG + SpO2 + BP wearable',         scene:'Hospital ICU monitoring'},
-  vehicle:      {cpu:2.10,mem:580, exec:110,sens:1.00, type:'LIDAR Point Cloud',      batch:2, src:'Autonomous vehicle LIDAR scan',    scene:'Self-driving car edge offload'},
+  iot:     {cpu:0.40,mem:120,exec:35,sens:0.85,type:'IoT',     desc:'Factory floor monitoring — temperature + vibration sensors'},
+  db:      {cpu:1.10,mem:400,exec:120,sens:0.50,type:'DB',      desc:'ERP query — 100K record retrieval across distributed nodes'},
+  camera:  {cpu:1.60,mem:500,exec:45,sens:0.90,type:'Camera',   desc:'CCTV analytics — real-time object detection at 30fps'},
+  health:  {cpu:0.60,mem:250,exec:25,sens:0.95,type:'Health',   desc:'Patient ECG monitor — continuous vital sign analysis'},
+  vehicle: {cpu:1.80,mem:550,exec:20,sens:1.00,type:'Vehicle',  desc:'Autonomous vehicle — LIDAR point cloud processing'},
 };
 
-const API_MOCK = {
-  iot:    {cpu_demand:0.45,memory_mb:130,exec_time_ms:40, latency_sensitivity:0.88},
-  db:     {cpu_demand:1.10,memory_mb:420,exec_time_ms:160,latency_sensitivity:0.52},
-  camera: {cpu_demand:1.75,memory_mb:500,exec_time_ms:88, latency_sensitivity:0.92},
-  health: {cpu_demand:0.32,memory_mb:75, exec_time_ms:20, latency_sensitivity:0.98},
-};
+let currentTab = 'manual';
+let currentPreset = 'iot';
 
-// ── Tab helpers ──
-function sv(id,val){document.getElementById(id).textContent=val;}
-function switchTab(t){
-  currentTab=t;
-  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['manual','api','preset'][i]===t));
-  document.querySelectorAll('.tab-panel').forEach(el=>el.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
+function sv(id,v) { document.getElementById(id).textContent = v; }
+
+function switchTab(t) {
+  currentTab = t;
+  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['manual','preset'][i] === t));
+  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + t).classList.add('active');
 }
-function setDtype(btn,t){
-  currentDtype=t;
-  document.querySelectorAll('#tab-api .dtype-pill').forEach(el=>el.classList.remove('active'));
+
+function loadPreset(btn, key) {
+  currentPreset = key;
+  document.querySelectorAll('#tab-preset .dtype-pill').forEach(el => el.classList.remove('active'));
   btn.classList.add('active');
-}
-function loadPreset(btn,key){
-  currentPreset=key;
-  document.querySelectorAll('#tab-preset .dtype-pill').forEach(el=>el.classList.remove('active'));
-  btn.classList.add('active');
-  const p=PRESETS[key];
-  document.getElementById('presetPreview').textContent=
-`cpu_demand     : ${p.cpu.toFixed(2)} GHz
-memory_mb      : ${p.mem} MB
-exec_time_ms   : ${p.exec} ms
-latency_sens   : ${p.sens.toFixed(2)}
-task_type      : ${p.type}
-batch_size     : ${p.batch} task${p.batch>1?'s':''}
-source         : ${p.src}
-scenario       : ${p.scene}`;
-}
-function fetchFromAPI(){
-  const mock=API_MOCK[currentDtype]||API_MOCK.iot;
-  document.getElementById('apiPreview').textContent=
-`// Fetched from ${document.getElementById('apiUrl').value}
-// Response received at ${new Date().toLocaleTimeString()}
-
-${JSON.stringify(mock,null,2)}
-
-// Status: 200 OK · 1 task record received`;
+  const p = PRESETS[key];
+  document.getElementById('presetPreview').textContent =
+    `cpu: ${p.cpu.toFixed(2)} GHz  mem: ${p.mem} MB  exec: ${p.exec} ms  sens: ${p.sens.toFixed(2)}\ntype: ${p.type}  ${p.desc}`;
 }
 
-// ── Get current task params ──
-function getTask(){
-  if(currentTab==='manual'){
+function getTask() {
+  if (currentTab === 'manual') {
     return {
-      cpu:  +document.getElementById('cpuSlider').value,
-      mem:  +document.getElementById('memSlider').value,
+      cpu: +document.getElementById('cpuSlider').value,
+      mem: +document.getElementById('memSlider').value,
       exec: +document.getElementById('execSlider').value,
       sens: +document.getElementById('sensSlider').value,
-      type: document.getElementById('taskType').options[document.getElementById('taskType').selectedIndex].text,
-      batch:+document.getElementById('batchSlider').value,
+      type: document.getElementById('taskType').value,
     };
-  } else if(currentTab==='api'){
-    let d=API_MOCK[currentDtype];
-    try{ const j=document.getElementById('jsonInput').value.trim(); if(j) d=JSON.parse(j); }catch(e){}
-    return {cpu:d.cpu_demand,mem:d.memory_mb,exec:d.exec_time_ms,sens:d.latency_sensitivity,type:currentDtype,batch:1};
   } else {
-    const p=PRESETS[currentPreset];
-    return {cpu:p.cpu,mem:p.mem,exec:p.exec,sens:p.sens,type:p.type,batch:p.batch};
+    const p = PRESETS[currentPreset];
+    return { cpu: p.cpu, mem: p.mem, exec: p.exec, sens: p.sens, type: p.type };
   }
 }
 
-// ── LQIM core ──
-function runLQIM(task){
-  const POP=30,N=NODES.length,ROT=0.05*Math.PI;
-  let pop=Array.from({length:POP},()=>Array.from({length:N},()=>({a:0.5,b:0.5})));
-  let bestFit=Infinity,bestNode=0,iters=0,bestResult=null;
-  for(let it=0;it<80;it++){
-    iters++;
-    for(let p=0;p<POP;p++){
-      const probs=pop[p].map(q=>q.b);
-      const sum=probs.reduce((a,b)=>a+b,0);
-      let r=Math.random()*sum,chosen=0;
-      for(let n=0;n<N;n++){r-=probs[n];if(r<=0){chosen=n;break;}}
-      const f=fitness(chosen,task);
-      if(f.score<bestFit){bestFit=f.score;bestNode=chosen;bestResult=f;}
-    }
-    for(let p=0;p<POP;p++){
-      for(let n=0;n<N;n++){
-        const cur=pop[p][n].b>0.5?1:0,best=n===bestNode?1:0;
-        const delta=(cur===0&&best===1)?ROT:(cur===1&&best===0)?-ROT:0;
-        if(delta!==0){
-          const cos=Math.cos(delta),sin=Math.sin(delta);
-          const a=Math.sqrt(pop[p][n].a),b=Math.sqrt(pop[p][n].b);
-          const na=cos*a+sin*b,nb=-sin*a+cos*b;
-          pop[p][n].a=Math.min(Math.max(na*na,0.001),0.999);
-          pop[p][n].b=Math.min(Math.max(nb*nb,0.001),0.999);
-          const tot=pop[p][n].a+pop[p][n].b;pop[p][n].a/=tot;pop[p][n].b/=tot;
-        }
+// ══════════════════════════════════════════════════════════
+//  FITNESS FUNCTION — identical to backend
+// ══════════════════════════════════════════════════════════
+function fitness(nodeIdx, task) {
+  const node = NODES[nodeIdx];
+  const load = liveLoads[nodeIdx] / 100;
+  const availCpu = Math.max(node.cpu * (1 - load), 0.01);
+  const cpuRatio = Math.max(availCpu / task.cpu, 0.1);
+
+  let lat = task.exec / cpuRatio * (1 + load * 0.5);
+  lat *= (1 + task.sens * 0.3);
+
+  const memRatio = task.mem / (node.ram * 1024);
+  if (memRatio > 0.8) lat *= (1 + (memRatio - 0.8) * 2);
+
+  const eng = task.cpu * 2.5 * (lat / 1000);
+  const util = Math.min(load + task.cpu / node.cpu, 1.0);
+  const score = 0.4 * (lat / 300) + 0.35 * (eng / 5) + 0.25 * (1 - util);
+  return { score, lat, eng, util };
+}
+
+// ══════════════════════════════════════════════════════════
+//  LQIM — REAL implementation matching backend
+// ══════════════════════════════════════════════════════════
+function runLQIM(task) {
+  const POP = 30, N = NODES.length, ROT = 0.04 * Math.PI, MAX = 80, MIN_IT = 12;
+
+  // Init Q-bit population: each is {a: alpha, b: beta}
+  const v = 1 / Math.sqrt(2);
+  let pop = Array.from({length: POP}, () =>
+    Array.from({length: N}, () => ({a: v, b: v}))
+  );
+
+  let bestFit = Infinity, bestNode = 0, iters = 0;
+  let bestLat = 0, bestEng = 0, bestUtil = 0;
+
+  for (let it = 0; it < MAX; it++) {
+    iters = it + 1;
+
+    // Measure + evaluate
+    for (let p = 0; p < POP; p++) {
+      const probs = pop[p].map(q => q.b * q.b); // β²
+      const total = probs.reduce((a, b) => a + b, 0);
+      let r = Math.random() * total, chosen = N - 1;
+      for (let n = 0; n < N; n++) { r -= probs[n]; if (r <= 0) { chosen = n; break; } }
+
+      const f = fitness(chosen, task);
+      if (f.score < bestFit) {
+        bestFit = f.score; bestNode = chosen;
+        bestLat = f.lat; bestEng = f.eng; bestUtil = f.util;
       }
     }
-    const avg=pop.reduce((s,ind)=>s+ind[bestNode].b,0)/POP;
-    if(avg>0.92&&it>8)break;
+
+    // Adaptive rotation
+    const rotStep = ROT * Math.max(0.4, 1 - it / MAX);
+    for (let p = 0; p < POP; p++) {
+      for (let n = 0; n < N; n++) {
+        const delta = (n === bestNode) ? rotStep : (-rotStep * 0.4);
+        const cos = Math.cos(delta), sin = Math.sin(delta);
+        const a = pop[p][n].a, b = pop[p][n].b;
+        const na = cos * a - sin * b;
+        const nb = sin * a + cos * b;
+        const norm = Math.sqrt(na * na + nb * nb);
+        if (norm > 1e-10) { pop[p][n].a = na / norm; pop[p][n].b = nb / norm; }
+      }
+    }
+
+    // Convergence check
+    if (it >= MIN_IT) {
+      const avgBeta = pop.reduce((s, ind) => s + ind[bestNode].b * ind[bestNode].b, 0) / POP;
+      if (avgBeta > 0.92) break;
+    }
   }
-  return {node:NODES[bestNode],nodeIdx:bestNode,iters,lat:bestResult.lat,eng:bestResult.eng,util:bestResult.util,fitness:bestFit};
+
+  return { node: NODES[bestNode], nodeIdx: bestNode, iters, lat: bestLat, eng: bestEng, util: bestUtil, fitness: bestFit };
 }
 
-function fitness(nodeIdx,task){
-  const node=NODES[nodeIdx],load=liveLoads[nodeIdx]/100;
-  const avail=Math.max(node.cpu*(1-load)/task.cpu,0.1);
-  const lat=task.exec*(1+load)/avail*(0.9+Math.random()*0.2);
-  const eng=task.cpu*2.5*(lat/1000);
-  const util=Math.min(load+task.cpu/node.cpu,1.0);
-  return{score:0.4*(lat/200)+0.35*(eng/5)+0.25*(1-util),lat,eng,util};
+// ══════════════════════════════════════════════════════════
+//  GA — REAL implementation matching backend
+// ══════════════════════════════════════════════════════════
+function runGA(task) {
+  const POP = 30, N = NODES.length, MAX = 80, MUT = 0.18;
+
+  let pop = Array.from({length: POP}, () => Math.floor(Math.random() * N));
+  let bestFit = Infinity, bestNode = 0;
+  let bestLat = 0, bestEng = 0, bestUtil = 0;
+
+  for (let gen = 0; gen < MAX; gen++) {
+    const fits = [];
+    for (let i = 0; i < POP; i++) {
+      const f = fitness(pop[i], task);
+      fits.push(f.score);
+      if (f.score < bestFit) {
+        bestFit = f.score; bestNode = pop[i];
+        bestLat = f.lat; bestEng = f.eng; bestUtil = f.util;
+      }
+    }
+
+    // Tournament selection
+    const newPop = [];
+    for (let i = 0; i < POP; i++) {
+      const a = Math.floor(Math.random() * POP);
+      const b = Math.floor(Math.random() * POP);
+      newPop.push(fits[a] < fits[b] ? pop[a] : pop[b]);
+    }
+
+    // Crossover
+    for (let i = 0; i < POP - 1; i += 2) {
+      if (Math.random() < 0.8) {
+        const tmp = newPop[i]; newPop[i] = newPop[i+1]; newPop[i+1] = tmp;
+      }
+    }
+
+    // Mutation
+    pop = newPop.map(g => Math.random() < MUT ? Math.floor(Math.random() * N) : g);
+  }
+
+  return { lat: bestLat, eng: bestEng, util: bestUtil, iters: MAX, fitness: bestFit, nodeIdx: bestNode };
 }
 
-// Simulate GA and PSO (deterministic approximation)
-function runGA(task){
-  const base=runLQIM(task);
-  // GA typically 10-20% worse latency, uses all 80 iterations
-  return {lat:base.lat*(1.08+Math.random()*0.12),eng:base.eng*(1.12+Math.random()*0.1),iters:80,solveTime:5.5+(Math.random()*2)};
-}
-function runPSO(task){
-  const base=runLQIM(task);
-  return {lat:base.lat*(1.03+Math.random()*0.08),eng:base.eng*(1.02+Math.random()*0.08),iters:80,solveTime:28+Math.random()*6};
+// ══════════════════════════════════════════════════════════
+//  PSO — REAL implementation matching backend
+// ══════════════════════════════════════════════════════════
+function runPSO(task) {
+  const NP = 30, N = NODES.length, MAX = 80;
+  const W = 0.7, C1 = 1.5, C2 = 1.5;
+
+  let pos = Array.from({length: NP}, () => Math.random() * (N - 1));
+  let vel = Array.from({length: NP}, () => (Math.random() - 0.5) * 4);
+  let pbest = [...pos];
+  let pbestFit = new Array(NP).fill(Infinity);
+  let gbest = 0, gbestFit = Infinity;
+  let bestLat = 0, bestEng = 0, bestUtil = 0;
+
+  for (let it = 0; it < MAX; it++) {
+    for (let i = 0; i < NP; i++) {
+      const idx = Math.min(Math.max(Math.round(pos[i]), 0), N - 1);
+      const f = fitness(idx, task);
+      if (f.score < pbestFit[i]) { pbestFit[i] = f.score; pbest[i] = pos[i]; }
+      if (f.score < gbestFit) {
+        gbestFit = f.score; gbest = pos[i];
+        bestLat = f.lat; bestEng = f.eng; bestUtil = f.util;
+      }
+    }
+    for (let i = 0; i < NP; i++) {
+      const r1 = Math.random(), r2 = Math.random();
+      vel[i] = W * vel[i] + C1 * r1 * (pbest[i] - pos[i]) + C2 * r2 * (gbest - pos[i]);
+      vel[i] = Math.max(-3, Math.min(3, vel[i]));
+      pos[i] = Math.max(0, Math.min(N - 1, pos[i] + vel[i]));
+    }
+  }
+
+  const bestNode = Math.min(Math.max(Math.round(gbest), 0), N - 1);
+  return { lat: bestLat, eng: bestEng, util: bestUtil, iters: MAX, fitness: gbestFit, nodeIdx: bestNode };
 }
 
-// ── Terminal logger ──
+// ══════════════════════════════════════════════════════════
+//  TERMINAL + ANIMATION HELPERS
+// ══════════════════════════════════════════════════════════
 let termLog;
-function tlog(msg,cls='tc'){
-  const d=document.createElement('div');d.className='tl '+cls;d.textContent=msg;
-  termLog.appendChild(d);termLog.scrollTop=termLog.scrollHeight;
+function tlog(msg, cls='tc') {
+  const d = document.createElement('div'); d.className = 'tl ' + cls; d.textContent = msg;
+  termLog.appendChild(d); termLog.scrollTop = termLog.scrollHeight;
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+function setStep(i, state) {
+  document.getElementById('ps' + i).className = 'pipe-step ' + state;
+  if (state === 'done') document.getElementById('pd' + i).textContent = '✓';
 }
 
-async function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
-
-// ── Main scheduler ──
-async function startSchedule(){
-  const task=getTask();
+// ══════════════════════════════════════════════════════════
+//  MAIN SCHEDULER
+// ══════════════════════════════════════════════════════════
+async function startSchedule() {
+  const task = getTask();
   taskCount++;
-  document.getElementById('runBtn').disabled=true;
+  document.getElementById('runBtn').disabled = true;
 
-  // Show block 2
-  const b2=document.getElementById('block2');
+  const b2 = document.getElementById('block2');
   b2.classList.add('show');
   b2.scrollIntoView({behavior:'smooth',block:'start'});
   document.getElementById('block3').classList.remove('show');
-  document.getElementById('procSubtitle').textContent=`Task #${taskCount} — ${task.type}`;
-  termLog=document.getElementById('termLog');
-  termLog.innerHTML='';
+  document.getElementById('procSubtitle').textContent = `Task #${taskCount} — ${task.type}`;
+  termLog = document.getElementById('termLog');
+  termLog.innerHTML = '';
 
-  // Reset steps
-  for(let i=0;i<7;i++){
-    document.getElementById('ps'+i).className='pipe-step';
-    document.getElementById('pd'+i).textContent=String(i+1).padStart(2,'0');
+  for (let i = 0; i < 7; i++) {
+    document.getElementById('ps'+i).className = 'pipe-step';
+    document.getElementById('pd'+i).textContent = String(i+1).padStart(2,'0');
   }
 
-  // Batch dots
-  const bg=document.getElementById('batchGrid');
-  bg.innerHTML='';
-  const total=Math.max(task.batch,1);
-  for(let i=0;i<total;i++){const d=document.createElement('div');d.className='batch-dot queued';d.id='bd'+i;bg.appendChild(d);}
-
-  tlog(`// Task #${taskCount} · Type: ${task.type}`,'tc');
-  tlog(`// CPU: ${task.cpu.toFixed(1)}GHz  Mem: ${task.mem}MB  Exec: ${task.exec}ms  Sens: ${task.sens.toFixed(1)}`,'tc');
-  tlog(`// Batch size: ${total} task${total>1?'s':''}`,'tc');
-
-  // Animate batch dots active
-  for(let i=0;i<total;i++){
-    setTimeout(()=>{document.getElementById('bd'+i)&&(document.getElementById('bd'+i).className='batch-dot active');},i*120);
-  }
-  await sleep(total*120+200);
+  tlog(`// Task #${taskCount} · Type: ${task.type}`, 'tc');
+  tlog(`// CPU: ${task.cpu.toFixed(1)}GHz  Mem: ${task.mem}MB  Exec: ${task.exec}ms  Sens: ${task.sens.toFixed(1)}`, 'tc');
 
   // Step 0 — init qbits
-  setStep(0,'active');
-  tlog('[01] Initialising Q-bit population (pop=30, nodes=10)…','tp');
-  const qr=document.getElementById('qbitRow');qr.innerHTML='';
-  for(let i=0;i<10;i++){const q=document.createElement('div');q.className='qb sup';q.id='qb'+i;q.textContent='α=β';qr.appendChild(q);}
-  await sleep(700);
-  setStep(0,'done');
+  setStep(0, 'active');
+  tlog('[01] Initialising Q-bit population (pop=30, nodes=10)…', 'tp');
+  const qr = document.getElementById('qbitRow'); qr.innerHTML = '';
+  for (let i = 0; i < 10; i++) {
+    const q = document.createElement('div'); q.className = 'qb sup'; q.id = 'qb'+i; q.textContent = 'α=β';
+    qr.appendChild(q);
+  }
+  await sleep(500);
+  setStep(0, 'done');
 
   // Step 1 — measure
-  setStep(1,'active');
-  tlog('[02] Measuring Q-bits → candidate node assignments…','tp');
-  for(let t=0;t<3;t++){
-    for(let i=0;i<10;i++) setTimeout(()=>{
-      const el=document.getElementById('qb'+i);
-      if(el){el.className=Math.random()>0.5?'qb sup':'qb';el.textContent=Math.random()>0.5?'1':'0';}
-    },t*100+i*15);
-    await sleep(350);
+  setStep(1, 'active');
+  tlog('[02] Measuring Q-bits → candidate assignments…', 'tp');
+  for (let t = 0; t < 3; t++) {
+    for (let i = 0; i < 10; i++) {
+      const el = document.getElementById('qb'+i);
+      if (el) { el.className = Math.random() > 0.5 ? 'qb sup' : 'qb'; el.textContent = Math.random() > 0.5 ? '1' : '0'; }
+    }
+    await sleep(200);
   }
-  await sleep(200);
-  setStep(1,'done');
+  setStep(1, 'done');
 
   // Step 2 — fitness
-  setStep(2,'active');
-  tlog('[03] Computing fitness F for 30 candidates…','tp');
-  tlog('     F = 0.4·Lat + 0.35·Eng + 0.25·(1−Util)','tc');
-  await sleep(550);
-  setStep(2,'done');
+  setStep(2, 'active');
+  tlog('[03] Computing fitness: F = 0.4·Lat + 0.35·Eng + 0.25·(1−Util)', 'tp');
+  await sleep(400);
+  setStep(2, 'done');
 
-  // Run algorithm
-  const result=runLQIM(task);
-  const gaRes=runGA(task);
-  const psoRes=runPSO(task);
-  const lqimSolveTime=47+Math.random()*6;
+  // Run LQIM
+  const result = runLQIM(task);
 
   // Step 3 — best
-  setStep(3,'active');
-  tlog(`[04] Global best → Node-${result.nodeIdx} · F=${result.fitness.toFixed(4)}`,'tp');
-  document.getElementById('bestDesc').textContent=
-    `Best node: Node-${result.nodeIdx} (${result.node.cpu}GHz, ${result.node.ram}GB RAM) · F = ${result.fitness.toFixed(4)}`;
-  await sleep(450);
-  setStep(3,'done');
+  setStep(3, 'active');
+  tlog(`[04] Global best → Node-${result.nodeIdx} (${NODES[result.nodeIdx].cpu}GHz, ${NODES[result.nodeIdx].ram}GB)`, 'tp');
+  document.getElementById('bestDesc').textContent =
+    `Best: Node-${result.nodeIdx} · F = ${result.fitness.toFixed(4)}`;
+  await sleep(350);
+  setStep(3, 'done');
 
-  // Step 4 — rotation with progress bar
-  setStep(4,'active');
-  const fill=document.getElementById('iterFill');
-  const lbl=document.getElementById('iterLabel');
-  const pct=document.getElementById('iterPct');
-  for(let i=1;i<=result.iters;i+=Math.ceil(result.iters/14)){
-    const p=Math.round(i/80*100);
-    fill.style.width=p+'%';
-    lbl.textContent=`Iteration ${i} / 80`;
-    pct.textContent=p+'%';
-    tlog(`[05] Rotating Q-bits… iter ${i}/${result.iters}`,'tp');
-    await sleep(120);
+  // Step 4 — rotation with progress
+  setStep(4, 'active');
+  const fill = document.getElementById('iterFill');
+  const lbl = document.getElementById('iterLabel');
+  const pct = document.getElementById('iterPct');
+  const steps = Math.min(12, result.iters);
+  for (let i = 1; i <= steps; i++) {
+    const cur = Math.round(i / steps * result.iters);
+    const p = Math.round(cur / 80 * 100);
+    fill.style.width = p + '%';
+    lbl.textContent = `Iteration ${cur} / 80`;
+    pct.textContent = p + '%';
+    await sleep(80);
   }
-  fill.style.width=Math.round(result.iters/80*100)+'%';
-  lbl.textContent=`Converged at iteration ${result.iters}`;
-  pct.textContent=Math.round(result.iters/80*100)+'%';
+  fill.style.width = Math.round(result.iters / 80 * 100) + '%';
+  lbl.textContent = `Converged at iteration ${result.iters}`;
+  pct.textContent = Math.round(result.iters / 80 * 100) + '%';
 
-  // highlight winner qbit
-  for(let i=0;i<10;i++){
-    const el=document.getElementById('qb'+i);
-    if(el){el.className=i===result.nodeIdx?'qb best':'qb';el.textContent=i===result.nodeIdx?'✓':'0';}
+  for (let i = 0; i < 10; i++) {
+    const el = document.getElementById('qb'+i);
+    if (el) { el.className = i === result.nodeIdx ? 'qb best' : 'qb'; el.textContent = i === result.nodeIdx ? '✓' : '0'; }
   }
-  await sleep(400);
-  setStep(4,'done');
+  await sleep(300);
+  setStep(4, 'done');
 
   // Step 5 — convergence
-  setStep(5,'active');
-  tlog(`[06] Convergence check → passed at iter ${result.iters} ✓`,'tok');
-  document.getElementById('convDesc').textContent=
-    `β² > 0.92 reached at iteration ${result.iters} (limit: 80) — ${80-result.iters} iterations saved`;
-  await sleep(400);
-  setStep(5,'done');
+  setStep(5, 'active');
+  tlog(`[06] Converged at iter ${result.iters} (saved ${80 - result.iters} iterations) ✓`, 'tok');
+  document.getElementById('convDesc').textContent =
+    `β² > 0.92 at iteration ${result.iters} — ${80 - result.iters} iterations saved vs GA/PSO`;
+  await sleep(300);
+  setStep(5, 'done');
 
-  // Step 6 — execute
-  setStep(6,'active');
-  tlog(`[07] Dispatching ${total} task${total>1?'s':''} → Node-${result.nodeIdx} ✓`,'tok');
-  tlog(`     Latency: ${result.lat.toFixed(1)}ms · Energy: ${result.eng.toFixed(4)}J · Load: ${(result.util*100).toFixed(1)}%`,'tok');
-  // batch dots → done
-  for(let i=0;i<total;i++) setTimeout(()=>{document.getElementById('bd'+i)&&(document.getElementById('bd'+i).className='batch-dot done');},i*80);
-  await sleep(400);
-  setStep(6,'done');
+  // Step 6 — run baselines
+  setStep(6, 'active');
+  tlog('[07] Running GA baseline (80 iterations)…', 'tp');
+  const gaRes = runGA(task);
+  tlog(`     GA  → Node-${gaRes.nodeIdx} · Lat: ${gaRes.lat.toFixed(1)}ms · 80 iters`, 'tc');
+  tlog('[07] Running PSO baseline (80 iterations)…', 'tp');
+  const psoRes = runPSO(task);
+  tlog(`     PSO → Node-${psoRes.nodeIdx} · Lat: ${psoRes.lat.toFixed(1)}ms · 80 iters`, 'tc');
+  tlog(`     LQIM → Node-${result.nodeIdx} · Lat: ${result.lat.toFixed(1)}ms · ${result.iters} iters ✓`, 'tok');
+  await sleep(300);
+  setStep(6, 'done');
 
   // Update loads
-  liveLoads[result.nodeIdx]=Math.min(liveLoads[result.nodeIdx]+Math.random()*5+2,95);
-  liveLoads.forEach((_,i)=>{if(i!==result.nodeIdx&&Math.random()<0.4) liveLoads[i]=Math.max(liveLoads[i]-Math.random()*3,4);});
+  liveLoads[result.nodeIdx] = Math.min(liveLoads[result.nodeIdx] + Math.random() * 4 + 2, 95);
 
-  await sleep(300);
-  showOutput(result,gaRes,psoRes,lqimSolveTime,taskCount,task);
+  await sleep(200);
+  showOutput(result, gaRes, psoRes, task);
 }
 
-function setStep(i,state){
-  document.getElementById('ps'+i).className='pipe-step '+state;
-  if(state==='done') document.getElementById('pd'+i).textContent='✓';
-}
+function showOutput(r, ga, pso, task) {
+  document.getElementById('bannerTitle').textContent = `Task #${taskCount} (${task.type}) → Node-${r.nodeIdx}`;
+  document.getElementById('bannerSub').textContent =
+    `Converged in ${r.iters} iterations (${Math.round((1 - r.iters/80)*100)}% fewer than GA/PSO) · ${NODES[r.nodeIdx].cpu}GHz · ${NODES[r.nodeIdx].ram}GB`;
 
-function showOutput(r,ga,pso,lqimTime,tid,task){
-  // Banner
-  document.getElementById('bannerTitle').textContent=`Task #${tid} (${task.type}) → Node-${r.nodeIdx} assigned`;
-  document.getElementById('bannerSub').textContent=`Converged in ${r.iters} iterations · ${r.node.cpu}GHz · ${r.node.ram}GB RAM`;
+  document.getElementById('oLat').textContent = r.lat.toFixed(1);
+  document.getElementById('oEng').textContent = r.eng.toFixed(4);
+  document.getElementById('oLoad').textContent = (r.util * 100).toFixed(1);
 
-  // Metrics
-  document.getElementById('oLat').textContent=r.lat.toFixed(1);
-  document.getElementById('oEng').textContent=r.eng.toFixed(4);
-  document.getElementById('oLoad').textContent=(r.util*100).toFixed(1);
-
-  // Speed bars — iterations used (lower = faster convergence)
-  const maxIter=80;
-  const lqimPct=Math.round(r.iters/maxIter*100);
-  const gaPct=100;
-  const psoPct=100;
-
-  setTimeout(()=>{
-    document.getElementById('barLQIM').style.width=lqimPct+'%';
-    document.getElementById('barLQIM').textContent=`${r.iters} iters`;
-    document.getElementById('barGA').style.width=gaPct+'%';
-    document.getElementById('barGA').textContent=`80 iters`;
-    document.getElementById('barPSO').style.width=psoPct+'%';
-    document.getElementById('barPSO').textContent=`80 iters`;
-  },300);
-
-  document.getElementById('valLQIM').textContent=lqimTime.toFixed(1)+'ms';
-  document.getElementById('valGA').textContent=ga.solveTime.toFixed(1)+'ms';
-  document.getElementById('valPSO').textContent=pso.solveTime.toFixed(1)+'ms';
-  document.getElementById('impLQIM').textContent='✓ best';
-  document.getElementById('impGA').textContent='';
-  document.getElementById('impPSO').textContent='';
+  // Iteration bars
+  const lqimPct = Math.round(r.iters / 80 * 100);
+  setTimeout(() => {
+    document.getElementById('barLQIM').style.width = lqimPct + '%';
+    document.getElementById('barLQIM').textContent = r.iters + ' iters';
+    document.getElementById('barGA').style.width = '100%';
+    document.getElementById('barGA').textContent = '80 iters';
+    document.getElementById('barPSO').style.width = '100%';
+    document.getElementById('barPSO').textContent = '80 iters';
+  }, 200);
+  document.getElementById('valLQIM').textContent = r.iters;
+  document.getElementById('valGA').textContent = '80';
+  document.getElementById('valPSO').textContent = '80';
+  document.getElementById('tagLQIM').textContent = `↓${Math.round((1-r.iters/80)*100)}% faster`;
+  document.getElementById('tagGA').textContent = 'fixed';
+  document.getElementById('tagPSO').textContent = 'fixed';
 
   // Latency bars
-  const maxLat=Math.max(r.lat,ga.lat,pso.lat);
-  const latImp=((ga.lat-r.lat)/ga.lat*100).toFixed(1);
-  setTimeout(()=>{
-    document.getElementById('latBarLQIM').style.width=Math.round(r.lat/maxLat*100)+'%';
-    document.getElementById('latBarLQIM').textContent=r.lat.toFixed(1)+'ms';
-    document.getElementById('latBarGA').style.width=Math.round(ga.lat/maxLat*100)+'%';
-    document.getElementById('latBarGA').textContent=ga.lat.toFixed(1)+'ms';
-    document.getElementById('latBarPSO').style.width=Math.round(pso.lat/maxLat*100)+'%';
-    document.getElementById('latBarPSO').textContent=pso.lat.toFixed(1)+'ms';
-  },600);
+  const maxLat = Math.max(r.lat, ga.lat, pso.lat);
+  const minLat = Math.min(r.lat, ga.lat, pso.lat);
+  const winner = minLat === r.lat ? 'LQIM' : minLat === ga.lat ? 'GA' : 'PSO';
 
-  document.getElementById('latValLQIM').textContent=r.lat.toFixed(1)+'ms';
-  document.getElementById('latValGA').textContent=ga.lat.toFixed(1)+'ms';
-  document.getElementById('latValPSO').textContent=pso.lat.toFixed(1)+'ms';
-  document.getElementById('latImpLQIM').textContent=`▼${latImp}% vs GA`;
+  setTimeout(() => {
+    document.getElementById('latBarLQIM').style.width = Math.round(r.lat / maxLat * 100) + '%';
+    document.getElementById('latBarLQIM').textContent = r.lat.toFixed(1) + 'ms';
+    document.getElementById('latBarGA').style.width = Math.round(ga.lat / maxLat * 100) + '%';
+    document.getElementById('latBarGA').textContent = ga.lat.toFixed(1) + 'ms';
+    document.getElementById('latBarPSO').style.width = Math.round(pso.lat / maxLat * 100) + '%';
+    document.getElementById('latBarPSO').textContent = pso.lat.toFixed(1) + 'ms';
+  }, 400);
+
+  document.getElementById('latValLQIM').textContent = r.lat.toFixed(1) + 'ms';
+  document.getElementById('latValGA').textContent = ga.lat.toFixed(1) + 'ms';
+  document.getElementById('latValPSO').textContent = pso.lat.toFixed(1) + 'ms';
+
+  // Show which is best for latency
+  const lqimVsGa = ((ga.lat - r.lat) / ga.lat * 100);
+  document.getElementById('latTagLQIM').textContent = winner === 'LQIM' ? '✓ best' : (lqimVsGa > 0 ? `↓${lqimVsGa.toFixed(0)}%` : `↑${Math.abs(lqimVsGa).toFixed(0)}%`);
+  document.getElementById('latTagGA').textContent = winner === 'GA' ? '✓ best' : '';
+  document.getElementById('latTagPSO').textContent = winner === 'PSO' ? '✓ best' : '';
+  document.getElementById('latTagLQIM').style.color = winner === 'LQIM' || lqimVsGa > 0 ? 'var(--green)' : 'var(--red)';
 
   // Node bars
-  const nb=document.getElementById('nodeBars');
-  nb.innerHTML='';
-  NODES.forEach((n,i)=>{
-    const load=liveLoads[i];
-    const color=load<30?'var(--green)':load<65?'#d97706':'var(--red)';
-    const winner=i===r.nodeIdx;
-    nb.innerHTML+=`<div class="nb-row ${winner?'winner':''}">
-      <span class="nb-id">N-${String(i).padStart(2,'0')}${winner?' ←':''}</span>
-      <div class="nb-track"><div class="nb-fill" style="width:${load.toFixed(0)}%;background:${color}${winner?';box-shadow:0 0 0 1px var(--accent)':''}"></div></div>
+  const nb = document.getElementById('nodeBars');
+  nb.innerHTML = '';
+  NODES.forEach((n, i) => {
+    const load = liveLoads[i];
+    const color = load < 30 ? 'var(--green)' : load < 65 ? 'var(--amber)' : 'var(--red)';
+    const win = i === r.nodeIdx;
+    nb.innerHTML += `<div class="nb-row ${win?'winner':''}">
+      <span class="nb-id">N-${String(i).padStart(2,'0')}${win?' ←':''}</span>
+      <div class="nb-track"><div class="nb-fill" style="width:${load.toFixed(0)}%;background:${color}"></div></div>
       <span class="nb-pct">${load.toFixed(0)}%</span>
     </div>`;
   });
 
-  const b3=document.getElementById('block3');
+  const b3 = document.getElementById('block3');
   b3.classList.add('show');
-  setTimeout(()=>b3.scrollIntoView({behavior:'smooth',block:'start'}),200);
-  document.getElementById('runBtn').disabled=false;
+  setTimeout(() => b3.scrollIntoView({behavior:'smooth',block:'start'}), 200);
+  document.getElementById('runBtn').disabled = false;
 }
 
-function resetAll(){
+function resetAll() {
   document.getElementById('block2').classList.remove('show');
   document.getElementById('block3').classList.remove('show');
-  document.getElementById('termLog').innerHTML='';
-  // Reset iter bar
-  document.getElementById('iterFill').style.width='0%';
-  document.getElementById('iterLabel').textContent='Iteration 0 / 80';
-  document.getElementById('iterPct').textContent='0%';
-  // Reset speed bars
-  ['LQIM','GA','PSO'].forEach(m=>{
-    document.getElementById('bar'+m).style.width='0%';
-    document.getElementById('bar'+m).textContent='';
-    document.getElementById('latBar'+m)&&(document.getElementById('latBar'+m).style.width='0%');
-    document.getElementById('latBar'+m)&&(document.getElementById('latBar'+m).textContent='');
+  document.getElementById('termLog').innerHTML = '';
+  document.getElementById('iterFill').style.width = '0%';
+  document.getElementById('iterLabel').textContent = 'Iteration 0 / 80';
+  document.getElementById('iterPct').textContent = '0%';
+  ['LQIM','GA','PSO'].forEach(m => {
+    const b = document.getElementById('bar'+m); if(b) { b.style.width='0%'; b.textContent=''; }
+    const l = document.getElementById('latBar'+m); if(l) { l.style.width='0%'; l.textContent=''; }
   });
   window.scrollTo({top:0,behavior:'smooth'});
 }
