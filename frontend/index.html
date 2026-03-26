@@ -3,899 +3,601 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LQIM – Edge Scheduler Demo</title>
+<title>LQIM – Edge Scheduler</title>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f5f6f8;
-  --white: #ffffff;
-  --border: #e1e5eb;
-  --border2: #c8ced8;
-  --text: #161b26;
-  --muted: #5f6d7e;
-  --muted2: #8e99a8;
-  --accent: #2563eb;
-  --accent-light: #eff4ff;
-  --accent-border: #b8cffd;
-  --green: #059669;
-  --green-light: #ecfdf5;
-  --green-border: #a7f3d0;
-  --red: #dc2626;
-  --red-light: #fef2f2;
-  --amber: #d97706;
-  --amber-light: #fffbeb;
-  --mono: 'JetBrains Mono', monospace;
-  --sans: 'DM Sans', sans-serif;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--sans);
-  min-height: 100vh;
-  padding: 24px 16px 60px;
-}
-.page { max-width: 760px; margin: 0 auto; }
-
-.header { text-align: center; margin-bottom: 28px; }
-.header h1 { font-size: 1.45rem; font-weight: 700; color: var(--text); letter-spacing: -0.03em; }
-.header p { font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
-.header-badges { display: flex; gap: 6px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
-.hbadge {
-  font-family: var(--mono); font-size: 0.6rem; padding: 3px 10px;
-  border-radius: 4px; border: 1px solid var(--border2); color: var(--muted);
-  background: var(--white);
-}
-
-.block {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  margin-bottom: 14px;
-  overflow: hidden;
-}
-.block-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 12px 18px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg);
-}
-.block-num {
-  width: 24px; height: 24px; border-radius: 50%;
-  background: var(--accent); color: #fff;
-  font-size: 0.68rem; font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.block-title { font-size: 0.85rem; font-weight: 600; }
-.block-sub { font-size: 0.72rem; color: var(--muted); margin-left: auto; }
-.block-body { padding: 18px; }
-
-.tabs { display: flex; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-.tab {
-  flex: 1; padding: 8px 10px; font-size: 0.76rem; font-weight: 500;
-  background: var(--white); color: var(--muted); border: none;
-  cursor: pointer; transition: all 0.15s; border-right: 1px solid var(--border);
-  font-family: var(--sans);
-}
-.tab:last-child { border-right: none; }
-.tab.active { background: var(--accent); color: #fff; }
-.tab-panel { display: none; }
-.tab-panel.active { display: block; }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-.form-group { display: flex; flex-direction: column; gap: 4px; }
-label { font-size: 0.7rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
-select {
-  padding: 8px 10px; border: 1px solid var(--border2); border-radius: 6px;
-  font-size: 0.82rem; color: var(--text); background: var(--white);
-  font-family: var(--sans); outline: none;
-}
-.slider-wrap { display: flex; align-items: center; gap: 8px; }
-input[type="range"] {
-  flex: 1; height: 4px; border-radius: 2px;
-  background: var(--border2); outline: none; border: none;
-  -webkit-appearance: none; cursor: pointer;
-}
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 14px; height: 14px;
-  border-radius: 50%; background: var(--accent);
-  border: 2px solid #fff; box-shadow: 0 0 0 1px var(--accent);
-}
-.slider-val { font-family: var(--mono); font-size: 0.7rem; color: var(--accent); min-width: 42px; text-align: right; }
-
-.dtype-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; }
-.dtype-pill {
-  padding: 5px 11px; border-radius: 18px; font-size: 0.72rem; font-weight: 500;
-  border: 1px solid var(--border2); background: var(--white); color: var(--muted);
-  cursor: pointer; transition: all 0.12s; font-family: var(--sans);
-}
-.dtype-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-
-.preview-box {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 7px;
-  padding: 10px 12px; font-family: var(--mono); font-size: 0.66rem;
-  color: var(--muted); line-height: 1.7; max-height: 100px; overflow-y: auto;
-  margin-top: 8px;
-}
-
-.run-btn {
-  width: 100%; padding: 12px; margin-top: 14px;
-  background: var(--accent); color: #fff; border: none; border-radius: 8px;
-  font-size: 0.82rem; font-weight: 600; cursor: pointer;
-  font-family: var(--sans); transition: opacity 0.15s;
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-}
-.run-btn:hover { opacity: 0.88; }
-.run-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-/* Processing */
-.pipeline { display: none; }
-.pipeline.show { display: block; }
-
-.pipe-track { position: relative; padding-left: 40px; }
-.pipe-track::before {
-  content: ''; position: absolute; left: 15px; top: 20px; bottom: 20px;
-  width: 1px; background: var(--border2);
-}
-.pipe-step { position: relative; display: flex; align-items: flex-start; gap: 12px; padding: 6px 0; margin-left: -40px; }
-.pipe-dot {
-  width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
-  background: var(--white); border: 1.5px solid var(--border2);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--mono); font-size: 0.58rem; color: var(--muted2);
-  transition: all 0.3s; position: relative;
-}
-.pipe-step.active .pipe-dot { background: var(--accent-light); border-color: var(--accent); color: var(--accent); font-weight: 700; }
-.pipe-step.done .pipe-dot { background: var(--green-light); border-color: var(--green); color: var(--green); }
-.pipe-step.active .pipe-dot::after {
-  content: ''; position: absolute; inset: -3px; border-radius: 50%;
-  border: 1.5px solid var(--accent); border-top-color: transparent;
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.pipe-step.done .pipe-dot::after { display: none; }
-.pipe-info { padding-top: 5px; flex: 1; }
-.pipe-name { font-size: 0.8rem; font-weight: 500; margin-bottom: 2px; }
-.pipe-step.active .pipe-name { color: var(--accent); }
-.pipe-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.4; }
-
-.qbit-row { display: flex; gap: 3px; margin-top: 6px; flex-wrap: wrap; }
-.qb {
-  width: 18px; height: 18px; border-radius: 3px;
-  background: var(--bg); border: 1px solid var(--border2);
-  font-family: var(--mono); font-size: 0.5rem; color: var(--muted2);
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.2s;
-}
-.qb.sup { background: var(--accent-light); border-color: var(--accent); color: var(--accent); }
-.qb.best { background: var(--green-light); border-color: var(--green); color: var(--green); font-weight: 700; }
-
-.iter-bar-wrap { margin-top: 8px; }
-.iter-bar-label { display: flex; justify-content: space-between; font-size: 0.66rem; color: var(--muted); margin-bottom: 4px; font-family: var(--mono); }
-.iter-bar-bg { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.iter-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; width: 0%; transition: width 0.15s; }
-
-.terminal {
-  background: #0d1520; border-radius: 7px; padding: 10px 12px;
-  font-family: var(--mono); font-size: 0.64rem; line-height: 1.8;
-  max-height: 130px; overflow-y: auto; margin-top: 12px; color: #64748b;
-}
-.terminal::-webkit-scrollbar { width: 3px; }
-.terminal::-webkit-scrollbar-thumb { background: #2a3f5f; border-radius: 2px; }
-.tl { animation: fl 0.15s ease; }
-@keyframes fl { from{opacity:0;transform:translateY(2px)} to{opacity:1;transform:none} }
-.tc { color: #94a3b8; } .tp { color: #60a5fa; } .tok { color: #4ade80; } .tw { color: #fbbf24; }
-
+:root{--bg:#f5f6f8;--white:#fff;--border:#e1e5eb;--border2:#c8ced8;--text:#161b26;--muted:#5f6d7e;--muted2:#8e99a8;--accent:#2563eb;--accent-light:#eff4ff;--accent-border:#b8cffd;--green:#059669;--green-light:#ecfdf5;--green-border:#a7f3d0;--red:#dc2626;--red-light:#fef2f2;--amber:#d97706;--amber-light:#fffbeb;--mono:'JetBrains Mono',monospace;--sans:'DM Sans',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;padding:20px 16px 60px}
+.page{max-width:800px;margin:0 auto}
+.header{text-align:center;margin-bottom:24px}
+.header h1{font-size:1.4rem;font-weight:700;letter-spacing:-.03em}
+.header p{font-size:.78rem;color:var(--muted);margin-top:3px}
+.badges{display:flex;gap:5px;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:.58rem;padding:2px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--muted);background:var(--white)}
+.block{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.bh{display:flex;align-items:center;gap:8px;padding:11px 16px;border-bottom:1px solid var(--border);background:var(--bg)}
+.bn{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:.64rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bt{font-size:.82rem;font-weight:600}
+.bs{font-size:.7rem;color:var(--muted);margin-left:auto}
+.bb{padding:16px}
+/* Tabs */
+.tabs{display:flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;margin-bottom:14px}
+.tab{flex:1;padding:7px 8px;font-size:.73rem;font-weight:500;background:var(--white);color:var(--muted);border:none;cursor:pointer;border-right:1px solid var(--border);font-family:var(--sans);transition:.15s}
+.tab:last-child{border-right:none}
+.tab.active{background:var(--accent);color:#fff}
+.tp{display:none}.tp.active{display:block}
+/* Forms */
+.fg{display:flex;flex-direction:column;gap:3px;margin-bottom:10px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+label{font-size:.68rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+input[type=number],input[type=text],select,textarea{padding:7px 10px;border:1px solid var(--border2);border-radius:6px;font-size:.8rem;color:var(--text);background:var(--white);font-family:var(--sans);outline:none;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(37,99,235,.08)}
+.hint{font-size:.64rem;color:var(--muted2);margin-top:1px}
+.pills{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px}
+.pill{padding:4px 10px;border-radius:16px;font-size:.7rem;font-weight:500;border:1px solid var(--border2);background:var(--white);color:var(--muted);cursor:pointer;font-family:var(--sans);transition:.12s}
+.pill.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.preview{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 10px;font-family:var(--mono);font-size:.62rem;color:var(--muted);line-height:1.6;max-height:90px;overflow-y:auto;margin-top:6px}
+/* Buttons */
+.btn{padding:10px 16px;border:none;border-radius:7px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:var(--sans);transition:.15s;display:inline-flex;align-items:center;gap:5px}
+.btn-primary{background:var(--accent);color:#fff;width:100%;justify-content:center;margin-top:12px}
+.btn-primary:hover{opacity:.88}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--muted)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{opacity:.88}
+.btn-sm{padding:6px 12px;font-size:.72rem}
+/* Pipeline */
+.pipeline{display:none}.pipeline.show{display:block}
+.pipe-track{position:relative;padding-left:36px}
+.pipe-track::before{content:'';position:absolute;left:13px;top:18px;bottom:18px;width:1px;background:var(--border2)}
+.ps{position:relative;display:flex;align-items:flex-start;gap:10px;padding:5px 0;margin-left:-36px}
+.pd{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:var(--white);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:.54rem;color:var(--muted2);transition:.3s;position:relative}
+.ps.active .pd{background:var(--accent-light);border-color:var(--accent);color:var(--accent);font-weight:700}
+.ps.done .pd{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.ps.active .pd::after{content:'';position:absolute;inset:-3px;border-radius:50%;border:1.5px solid var(--accent);border-top-color:transparent;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ps.done .pd::after{display:none}
+.pi{padding-top:3px;flex:1}
+.pn{font-size:.78rem;font-weight:500;margin-bottom:1px}
+.ps.active .pn{color:var(--accent)}
+.pdesc{font-size:.68rem;color:var(--muted);line-height:1.4}
+.qr{display:flex;gap:2px;margin-top:4px;flex-wrap:wrap}
+.qb{width:16px;height:16px;border-radius:2px;background:var(--bg);border:1px solid var(--border2);font-family:var(--mono);font-size:.48rem;color:var(--muted2);display:flex;align-items:center;justify-content:center;transition:.2s}
+.qb.sup{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+.qb.best{background:var(--green-light);border-color:var(--green);color:var(--green);font-weight:700}
+.ibw{margin-top:6px}
+.ibl{display:flex;justify-content:space-between;font-size:.64rem;color:var(--muted);margin-bottom:3px;font-family:var(--mono)}
+.ibbg{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.ibf{height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width .15s}
+.term{background:#0d1520;border-radius:6px;padding:8px 10px;font-family:var(--mono);font-size:.62rem;line-height:1.7;max-height:120px;overflow-y:auto;margin-top:10px;color:#64748b}
+.term::-webkit-scrollbar{width:3px}
+.term::-webkit-scrollbar-thumb{background:#2a3f5f;border-radius:2px}
+.tl{animation:fl .15s ease}
+@keyframes fl{from{opacity:0;transform:translateY(2px)}to{opacity:1;transform:none}}
+.tc{color:#94a3b8}.tp2{color:#60a5fa}.tok{color:#4ade80}.tw{color:#fbbf24}
 /* Output */
-.output-section { display: none; }
-.output-section.show { display: block; }
-
-.result-banner {
-  background: var(--green-light); border: 1px solid var(--green-border);
-  border-radius: 8px; padding: 12px 14px; margin-bottom: 14px;
-  display: flex; align-items: center; gap: 10px;
-}
-.result-banner-icon { font-size: 1.2rem; }
-.result-banner-title { font-size: 0.84rem; font-weight: 600; color: var(--green); }
-.result-banner-sub { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
-
-.metrics-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
-.m-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px 10px; text-align: center; }
-.m-label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; }
-.m-val { font-size: 1.2rem; font-weight: 700; line-height: 1; }
-.m-unit { font-size: 0.62rem; color: var(--muted2); margin-top: 3px; font-family: var(--mono); }
-.m-card.lat { border-color: var(--accent-border); background: var(--accent-light); }
-.m-card.lat .m-val { color: var(--accent); }
-.m-card.eng { border-color: #fcd34d; background: #fffbeb; }
-.m-card.eng .m-val { color: var(--amber); }
-.m-card.lod { border-color: var(--green-border); background: var(--green-light); }
-.m-card.lod .m-val { color: var(--green); }
-
-.sc-title { font-size: 0.7rem; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
-.sc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-.sc-method { font-size: 0.76rem; font-weight: 500; width: 46px; flex-shrink: 0; }
-.sc-bar-bg { flex: 1; height: 26px; background: var(--bg); border-radius: 5px; border: 1px solid var(--border); overflow: hidden; }
-.sc-bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-family: var(--mono); font-size: 0.64rem; font-weight: 700; color: #fff; transition: width 1s cubic-bezier(0.4,0,0.2,1); white-space: nowrap; }
-.sc-val { font-family: var(--mono); font-size: 0.7rem; color: var(--muted); width: 50px; text-align: right; flex-shrink: 0; }
-.sc-tag { font-size: 0.66rem; font-weight: 500; width: 70px; text-align: right; flex-shrink: 0; }
-
-.nb-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-.nb-id { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); width: 40px; flex-shrink: 0; }
-.nb-track { flex: 1; height: 7px; background: var(--border); border-radius: 3px; overflow: hidden; }
-.nb-fill { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
-.nb-pct { font-family: var(--mono); font-size: 0.6rem; color: var(--muted); width: 28px; text-align: right; flex-shrink: 0; }
-.nb-row.winner .nb-id, .nb-row.winner .nb-pct { color: var(--accent); font-weight: 700; }
-
-.reset-btn {
-  width: 100%; padding: 9px; margin-top: 12px;
-  background: transparent; border: 1px solid var(--border2); color: var(--muted);
-  border-radius: 7px; font-size: 0.76rem; cursor: pointer; font-family: var(--sans);
-}
-.reset-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-@media(max-width: 480px) {
-  .form-row { grid-template-columns: 1fr; }
-  .metrics-3 { grid-template-columns: 1fr 1fr; }
-}
+.output{display:none}.output.show{display:block}
+.rbanner{background:var(--green-light);border:1px solid var(--green-border);border-radius:7px;padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.rbanner-t{font-size:.82rem;font-weight:600;color:var(--green)}
+.rbanner-s{font-size:.68rem;color:var(--muted);margin-top:1px}
+.m3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:14px}
+.mc{border:1px solid var(--border);border-radius:7px;padding:10px 8px;text-align:center}
+.ml{font-size:.6rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
+.mv{font-size:1.15rem;font-weight:700;line-height:1}
+.mu{font-size:.6rem;color:var(--muted2);margin-top:2px;font-family:var(--mono)}
+.mc.lat{border-color:var(--accent-border);background:var(--accent-light)}.mc.lat .mv{color:var(--accent)}
+.mc.eng{border-color:#fcd34d;background:#fffbeb}.mc.eng .mv{color:var(--amber)}
+.mc.lod{border-color:var(--green-border);background:var(--green-light)}.mc.lod .mv{color:var(--green)}
+.sct{font-size:.68rem;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.scr{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.scm{font-size:.74rem;font-weight:500;width:42px;flex-shrink:0}
+.scbbg{flex:1;height:24px;background:var(--bg);border-radius:4px;border:1px solid var(--border);overflow:hidden}
+.scbf{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:6px;font-family:var(--mono);font-size:.62rem;font-weight:700;color:#fff;transition:width 1s cubic-bezier(.4,0,.2,1);white-space:nowrap}
+.scv{font-family:var(--mono);font-size:.68rem;color:var(--muted);width:46px;text-align:right;flex-shrink:0}
+.sctag{font-size:.64rem;font-weight:500;width:64px;text-align:right;flex-shrink:0}
+.nbr{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.nbi{font-family:var(--mono);font-size:.58rem;color:var(--muted);width:36px;flex-shrink:0}
+.nbt{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.nbf{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.nbp{font-family:var(--mono);font-size:.58rem;color:var(--muted);width:26px;text-align:right;flex-shrink:0}
+.nbr.win .nbi,.nbr.win .nbp{color:var(--accent);font-weight:700}
+/* Live feed */
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;animation:pulse 1.2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* Report overlay */
+.report-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;overflow-y:auto}
+.report-overlay.show{display:flex;justify-content:center;padding:20px}
+.report-card{background:var(--white);border-radius:12px;max-width:800px;width:100%;padding:24px;max-height:90vh;overflow-y:auto;position:relative}
+.report-close{position:absolute;top:12px;right:14px;background:none;border:none;font-size:1.2rem;cursor:pointer;color:var(--muted)}
+.report-table{width:100%;border-collapse:collapse;font-size:.72rem;margin-top:12px}
+.report-table th,.report-table td{padding:6px 8px;text-align:left;border-bottom:1px solid var(--border)}
+.report-table th{font-weight:600;color:var(--muted);text-transform:uppercase;font-size:.64rem;letter-spacing:.04em;background:var(--bg)}
+.report-table tr:hover td{background:var(--accent-light)}
+.report-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.rs-card{border:1px solid var(--border);border-radius:7px;padding:10px;text-align:center}
+.rs-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.rs-val{font-size:1.1rem;font-weight:700;margin-top:3px}
+/* Batch progress */
+.batch-grid{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:10px}
+.bdot{width:12px;height:12px;border-radius:2px;background:var(--border);transition:.2s}
+.bdot.q{background:var(--amber-light);border:1px solid #fcd34d}
+.bdot.a{background:var(--accent-light);border:1px solid var(--accent)}
+.bdot.d{background:var(--green-light);border:1px solid var(--green-border)}
+@media(max-width:480px){.fr{grid-template-columns:1fr}.m3{grid-template-columns:1fr 1fr}.report-summary{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="page">
+<div class="header">
+  <h1>LQIM Edge Task Scheduler</h1>
+  <p>Lightweight Quantum-Inspired Metaheuristic · Karpagam Institute of Technology</p>
+  <div class="badges"><span class="badge">10 Edge Nodes</span><span class="badge">5 Task Types</span><span class="badge">LQIM vs GA vs PSO</span><span class="badge">Real-time Ready</span></div>
+</div>
 
-  <div class="header">
-    <h1>LQIM Edge Task Scheduler</h1>
-    <p>Lightweight Quantum-Inspired Metaheuristic · Karpagam Institute of Technology</p>
-    <div class="header-badges">
-      <span class="hbadge">10 Edge Nodes</span>
-      <span class="hbadge">5 Task Types</span>
-      <span class="hbadge">LQIM vs GA vs PSO</span>
+<!-- BLOCK 1: INPUT -->
+<div class="block" id="inputBlock">
+  <div class="bh"><div class="bn">1</div><div class="bt">Task Input</div><div class="bs">Custom · Preset · Batch · Live</div></div>
+  <div class="bb">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('custom')">Custom Input</button>
+      <button class="tab" onclick="switchTab('preset')">Preset</button>
+      <button class="tab" onclick="switchTab('batch')">Batch / CSV</button>
+      <button class="tab" onclick="switchTab('live')">Live Simulator</button>
+    </div>
+
+    <!-- CUSTOM TAB -->
+    <div class="tp active" id="tab-custom">
+      <div class="fr">
+        <div class="fg"><label>CPU Demand (GHz)</label><input type="number" id="inCpu" min="0.1" max="3.0" step="0.1" value="0.8"><div class="hint">Range: 0.1 – 3.0 GHz</div></div>
+        <div class="fg"><label>Memory Required (MB)</label><input type="number" id="inMem" min="10" max="2048" step="10" value="200"><div class="hint">Range: 10 – 2048 MB</div></div>
+        <div class="fg"><label>Execution Time (ms)</label><input type="number" id="inExec" min="1" max="500" step="1" value="60"><div class="hint">Range: 1 – 500 ms</div></div>
+        <div class="fg"><label>Latency Sensitivity</label><input type="number" id="inSens" min="0.0" max="1.0" step="0.05" value="0.7"><div class="hint">0.0 = not critical, 1.0 = ultra critical</div></div>
+      </div>
+      <div class="fg"><label>Task Type</label>
+        <select id="inType"><option>IoT</option><option>DB</option><option selected>Camera</option><option>Health</option><option>Vehicle</option></select>
+      </div>
+    </div>
+
+    <!-- PRESET TAB -->
+    <div class="tp" id="tab-preset">
+      <label>Choose a scenario</label>
+      <div class="pills" style="margin-top:6px">
+        <button class="pill active" onclick="loadPreset(this,'iot')">Factory IoT</button>
+        <button class="pill" onclick="loadPreset(this,'db')">ERP DB Query</button>
+        <button class="pill" onclick="loadPreset(this,'camera')">CCTV Frame</button>
+        <button class="pill" onclick="loadPreset(this,'health')">Patient Monitor</button>
+        <button class="pill" onclick="loadPreset(this,'vehicle')">Vehicle LIDAR</button>
+      </div>
+      <div class="preview" id="presetPrev">CPU: 0.40 GHz · Mem: 120 MB · Exec: 35 ms · Sens: 0.85
+Type: IoT · Factory floor — temperature + vibration sensors</div>
+    </div>
+
+    <!-- BATCH TAB -->
+    <div class="tp" id="tab-batch">
+      <div class="fg"><label>Option 1: Generate random batch</label>
+        <div style="display:flex;gap:8px;align-items:end">
+          <div class="fg" style="flex:1;margin:0"><label>Number of tasks</label><input type="number" id="batchCount" min="2" max="100" value="10"></div>
+          <button class="btn btn-outline btn-sm" onclick="generateBatch()" style="height:34px">Generate</button>
+        </div>
+      </div>
+      <div class="fg" style="margin-top:10px"><label>Option 2: Paste CSV data</label>
+        <textarea id="csvInput" rows="4" placeholder="cpu_demand,memory_mb,exec_time_ms,latency_sensitivity,task_type
+0.8,200,60,0.7,Camera
+1.2,400,120,0.5,DB
+0.3,100,25,0.95,Health" style="font-family:var(--mono);font-size:.68rem"></textarea>
+        <div class="hint">Format: cpu_demand, memory_mb, exec_time_ms, latency_sensitivity, task_type</div>
+      </div>
+      <div class="preview" id="batchPrev">// Batch tasks will appear here…</div>
+    </div>
+
+    <!-- LIVE SIMULATOR TAB -->
+    <div class="tp" id="tab-live">
+      <div class="fg"><label>Live IoT Data Simulator</label>
+        <p style="font-size:.74rem;color:var(--muted);margin-bottom:8px">Generates realistic IoT sensor data every 2 seconds — simulates a factory floor with temperature sensors, camera feeds, and health monitors sending tasks to the edge scheduler in real-time.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select id="liveSource" style="flex:1">
+            <option value="factory">Smart Factory (mixed IoT sensors)</option>
+            <option value="hospital">Hospital (patient monitors + cameras)</option>
+            <option value="traffic">Smart City (CCTV + vehicle sensors)</option>
+          </select>
+          <button class="btn btn-green btn-sm" id="liveBtn" onclick="toggleLive()"><span class="live-dot" style="display:none" id="liveDot"></span> Start Live Feed</button>
+        </div>
+        <div class="hint">Tasks will auto-schedule every 2 seconds. Click Stop to pause.</div>
+      </div>
+      <div id="liveLog" class="preview" style="max-height:120px">// Live feed output…</div>
+    </div>
+
+    <button class="btn btn-primary" id="runBtn" onclick="startSchedule()">▶ Run LQIM Scheduler</button>
+  </div>
+</div>
+
+<!-- BLOCK 2: PROCESSING -->
+<div class="block pipeline" id="block2">
+  <div class="bh"><div class="bn">2</div><div class="bt">Algorithm Processing</div><div class="bs" id="procSub">Running…</div></div>
+  <div class="bb">
+    <div class="batch-grid" id="batchGrid"></div>
+    <div class="pipe-track">
+      <div class="ps" id="ps0"><div class="pd" id="pd0">01</div><div class="pi"><div class="pn">Initialise Q-bit Population</div><div class="pdesc">30 individuals × 10 nodes · α = β = 1/√2</div><div class="qr" id="qbitRow"></div></div></div>
+      <div class="ps" id="ps1"><div class="pd" id="pd1">02</div><div class="pi"><div class="pn">Measure → Candidate Assignments</div><div class="pdesc">Collapse Q-bits by β² probability</div></div></div>
+      <div class="ps" id="ps2"><div class="pd" id="pd2">03</div><div class="pi"><div class="pn">Compute Fitness F</div><div class="pdesc">F = 0.4·Latency + 0.35·Energy + 0.25·(1 − Util)</div></div></div>
+      <div class="ps" id="ps3"><div class="pd" id="pd3">04</div><div class="pi"><div class="pn">Update Global Best</div><div class="pdesc" id="bestDesc">Tracking lowest fitness</div></div></div>
+      <div class="ps" id="ps4"><div class="pd" id="pd4">05</div><div class="pi"><div class="pn">Rotation Gate Δθ (adaptive)</div><div class="pdesc">Steering Q-bits toward best node</div><div class="ibw"><div class="ibl"><span id="iterLabel">Iter 0 / 80</span><span id="iterPct">0%</span></div><div class="ibbg"><div class="ibf" id="iterFill"></div></div></div></div></div>
+      <div class="ps" id="ps5"><div class="pd" id="pd5">06</div><div class="pi"><div class="pn">Convergence Check</div><div class="pdesc" id="convDesc">β² > 0.92 → early stop</div></div></div>
+      <div class="ps" id="ps6"><div class="pd" id="pd6">07</div><div class="pi"><div class="pn">Execute + Run GA & PSO Baselines</div><div class="pdesc">Compare all 3 algorithms on same task</div></div></div>
+    </div>
+    <div class="term" id="termLog"></div>
+  </div>
+</div>
+
+<!-- BLOCK 3: OUTPUT -->
+<div class="block output" id="block3">
+  <div class="bh"><div class="bn">3</div><div class="bt">Result + Comparison</div><div class="bs">LQIM vs GA vs PSO</div></div>
+  <div class="bb">
+    <div class="rbanner"><div style="font-size:1.1rem">✓</div><div><div class="rbanner-t" id="bannerT">Scheduled</div><div class="rbanner-s" id="bannerS"></div></div></div>
+    <div class="m3">
+      <div class="mc lat"><div class="ml">Latency</div><div class="mv" id="oLat">—</div><div class="mu">ms</div></div>
+      <div class="mc eng"><div class="ml">Energy</div><div class="mv" id="oEng">—</div><div class="mu">joules</div></div>
+      <div class="mc lod"><div class="ml">Load</div><div class="mv" id="oLoad">—</div><div class="mu">%</div></div>
+    </div>
+    <div style="margin-bottom:14px"><div class="sct">Convergence — iterations (fewer = faster)</div>
+      <div class="scr"><div class="scm" style="color:var(--accent);font-weight:600">LQIM</div><div class="scbbg"><div class="scbf" id="barLQIM" style="background:var(--accent)"></div></div><div class="scv" id="valLQIM">—</div><div class="sctag" id="tagLQIM" style="color:var(--green)"></div></div>
+      <div class="scr"><div class="scm" style="color:var(--amber)">GA</div><div class="scbbg"><div class="scbf" id="barGA" style="background:var(--amber)"></div></div><div class="scv" id="valGA">—</div><div class="sctag" id="tagGA"></div></div>
+      <div class="scr"><div class="scm" style="color:var(--red)">PSO</div><div class="scbbg"><div class="scbf" id="barPSO" style="background:var(--red)"></div></div><div class="scv" id="valPSO">—</div><div class="sctag" id="tagPSO"></div></div>
+    </div>
+    <div style="margin-bottom:14px"><div class="sct">Task latency — ms (lower = better)</div>
+      <div class="scr"><div class="scm" style="color:var(--accent);font-weight:600">LQIM</div><div class="scbbg"><div class="scbf" id="latBL" style="background:var(--accent)"></div></div><div class="scv" id="latVL">—</div><div class="sctag" id="latTL" style="color:var(--green)"></div></div>
+      <div class="scr"><div class="scm" style="color:var(--amber)">GA</div><div class="scbbg"><div class="scbf" id="latBG" style="background:var(--amber)"></div></div><div class="scv" id="latVG">—</div><div class="sctag" id="latTG"></div></div>
+      <div class="scr"><div class="scm" style="color:var(--red)">PSO</div><div class="scbbg"><div class="scbf" id="latBP" style="background:var(--red)"></div></div><div class="scv" id="latVP">—</div><div class="sctag" id="latTP"></div></div>
+    </div>
+    <div class="sct">Edge node load distribution</div>
+    <div id="nodeBars"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-outline" style="flex:1" onclick="resetAll()">Reset</button>
+      <button class="btn btn-green" style="flex:1" id="reportBtn" onclick="showReport()">View Full Report</button>
     </div>
   </div>
+</div>
+</div>
 
-  <!-- BLOCK 1 — INPUT -->
-  <div class="block">
-    <div class="block-header">
-      <div class="block-num">1</div>
-      <div class="block-title">Task Input</div>
-      <div class="block-sub">Manual · Preset</div>
-    </div>
-    <div class="block-body">
-      <div class="tabs">
-        <button class="tab active" onclick="switchTab('manual')">Manual Input</button>
-        <button class="tab" onclick="switchTab('preset')">Preset Scenarios</button>
-      </div>
-
-      <div class="tab-panel active" id="tab-manual">
-        <div class="form-row">
-          <div class="form-group">
-            <label>CPU Demand</label>
-            <div class="slider-wrap">
-              <input type="range" id="cpuSlider" min="0.2" max="2.0" step="0.1" value="0.8"
-                oninput="sv('cpuVal',(+this.value).toFixed(1)+' GHz')">
-              <span class="slider-val" id="cpuVal">0.8 GHz</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Memory Required</label>
-            <div class="slider-wrap">
-              <input type="range" id="memSlider" min="50" max="600" step="10" value="200"
-                oninput="sv('memVal',this.value+' MB')">
-              <span class="slider-val" id="memVal">200 MB</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Execution Time</label>
-            <div class="slider-wrap">
-              <input type="range" id="execSlider" min="10" max="200" step="5" value="60"
-                oninput="sv('execVal',this.value+' ms')">
-              <span class="slider-val" id="execVal">60 ms</span>
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Latency Sensitivity</label>
-            <div class="slider-wrap">
-              <input type="range" id="sensSlider" min="0.1" max="1.0" step="0.1" value="0.7"
-                oninput="sv('sensVal',(+this.value).toFixed(1))">
-              <span class="slider-val" id="sensVal">0.7</span>
-            </div>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Task Type</label>
-            <select id="taskType">
-              <option value="IoT">IoT Sensor</option>
-              <option value="DB">DB Query</option>
-              <option value="Camera" selected>Camera Frame</option>
-              <option value="Health">Health Monitor</option>
-              <option value="Vehicle">Vehicle LIDAR</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-panel" id="tab-preset">
-        <div class="form-group" style="margin-bottom:8px">
-          <label>Choose a real-world scenario</label>
-          <div class="dtype-pills" style="margin-top:6px">
-            <button class="dtype-pill active" onclick="loadPreset(this,'iot')">Factory IoT</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'db')">ERP DB Query</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'camera')">CCTV Frame</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'health')">Patient Monitor</button>
-            <button class="dtype-pill" onclick="loadPreset(this,'vehicle')">Vehicle LIDAR</button>
-          </div>
-        </div>
-        <div class="preview-box" id="presetPreview">cpu: 0.40 GHz  mem: 120 MB  exec: 35 ms  sens: 0.85
-type: IoT Sensor  source: Temperature + Vibration sensors
-scenario: Factory floor monitoring — real-time anomaly detection</div>
-      </div>
-
-      <button class="run-btn" id="runBtn" onclick="startSchedule()">
-        ▶ Run LQIM Scheduler
-      </button>
-    </div>
+<!-- REPORT OVERLAY -->
+<div class="report-overlay" id="reportOverlay">
+  <div class="report-card">
+    <button class="report-close" onclick="closeReport()">✕</button>
+    <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:4px">LQIM Scheduling Report</h2>
+    <p style="font-size:.74rem;color:var(--muted)" id="reportDate"></p>
+    <div class="report-summary" id="reportSummary"></div>
+    <h3 style="font-size:.84rem;font-weight:600;margin:14px 0 6px">Task-by-Task Results</h3>
+    <div style="overflow-x:auto"><table class="report-table" id="reportTable"><thead><tr>
+      <th>#</th><th>Type</th><th>CPU</th><th>Mem</th><th>Exec</th><th>Sens</th>
+      <th>LQIM Node</th><th>LQIM Lat</th><th>GA Lat</th><th>PSO Lat</th><th>LQIM Iters</th>
+    </tr></thead><tbody id="reportBody"></tbody></table></div>
   </div>
-
-  <!-- BLOCK 2 — PROCESSING -->
-  <div class="block pipeline" id="block2">
-    <div class="block-header">
-      <div class="block-num">2</div>
-      <div class="block-title">Algorithm Processing</div>
-      <div class="block-sub" id="procSubtitle">Running…</div>
-    </div>
-    <div class="block-body">
-      <div class="pipe-track" id="pipeTrack">
-        <div class="pipe-step" id="ps0"><div class="pipe-dot" id="pd0">01</div>
-          <div class="pipe-info">
-            <div class="pipe-name">Initialise Q-bit Population</div>
-            <div class="pipe-desc">30 individuals × 10 nodes · α = β = 1/√2</div>
-            <div class="qbit-row" id="qbitRow"></div>
-          </div>
-        </div>
-        <div class="pipe-step" id="ps1"><div class="pipe-dot" id="pd1">02</div>
-          <div class="pipe-info"><div class="pipe-name">Measure → Candidate Assignments</div>
-            <div class="pipe-desc">Collapse Q-bits by probability β² to select nodes</div></div>
-        </div>
-        <div class="pipe-step" id="ps2"><div class="pipe-dot" id="pd2">03</div>
-          <div class="pipe-info"><div class="pipe-name">Compute Fitness F</div>
-            <div class="pipe-desc">F = 0.4·Latency + 0.35·Energy + 0.25·(1 − Utilisation)</div></div>
-        </div>
-        <div class="pipe-step" id="ps3"><div class="pipe-dot" id="pd3">04</div>
-          <div class="pipe-info"><div class="pipe-name">Update Global Best</div>
-            <div class="pipe-desc" id="bestDesc">Track lowest-fitness assignment</div></div>
-        </div>
-        <div class="pipe-step" id="ps4"><div class="pipe-dot" id="pd4">05</div>
-          <div class="pipe-info"><div class="pipe-name">Rotation Gate Update Δθ</div>
-            <div class="pipe-desc">Steer Q-bits toward best node · adaptive step</div>
-            <div class="iter-bar-wrap">
-              <div class="iter-bar-label"><span id="iterLabel">Iteration 0 / 80</span><span id="iterPct">0%</span></div>
-              <div class="iter-bar-bg"><div class="iter-bar-fill" id="iterFill"></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="pipe-step" id="ps5"><div class="pipe-dot" id="pd5">06</div>
-          <div class="pipe-info"><div class="pipe-name">Convergence Check</div>
-            <div class="pipe-desc" id="convDesc">β² > 0.92 → converged (early stop)</div></div>
-        </div>
-        <div class="pipe-step" id="ps6"><div class="pipe-dot" id="pd6">07</div>
-          <div class="pipe-info"><div class="pipe-name">Execute Schedule + Run Baselines</div>
-            <div class="pipe-desc">Dispatch task; run GA and PSO for comparison</div></div>
-        </div>
-      </div>
-      <div class="terminal" id="termLog"></div>
-    </div>
-  </div>
-
-  <!-- BLOCK 3 — OUTPUT -->
-  <div class="block output-section" id="block3">
-    <div class="block-header">
-      <div class="block-num">3</div>
-      <div class="block-title">Result + Comparison</div>
-      <div class="block-sub">LQIM vs GA vs PSO</div>
-    </div>
-    <div class="block-body">
-      <div class="result-banner">
-        <div class="result-banner-icon">✓</div>
-        <div>
-          <div class="result-banner-title" id="bannerTitle">Scheduled</div>
-          <div class="result-banner-sub" id="bannerSub"></div>
-        </div>
-      </div>
-
-      <div class="metrics-3">
-        <div class="m-card lat"><div class="m-label">Latency</div><div class="m-val" id="oLat">—</div><div class="m-unit">milliseconds</div></div>
-        <div class="m-card eng"><div class="m-label">Energy</div><div class="m-val" id="oEng">—</div><div class="m-unit">joules</div></div>
-        <div class="m-card lod"><div class="m-label">Node Load</div><div class="m-val" id="oLoad">—</div><div class="m-unit">% utilised</div></div>
-      </div>
-
-      <!-- Iteration comparison -->
-      <div style="margin-bottom:16px">
-        <div class="sc-title">Convergence speed — iterations used (fewer = faster)</div>
-        <div class="sc-row">
-          <div class="sc-method" style="color:var(--accent);font-weight:600">LQIM</div>
-          <div class="sc-bar-bg"><div class="sc-bar-fill" id="barLQIM" style="background:var(--accent);width:0%"></div></div>
-          <div class="sc-val" id="valLQIM">—</div>
-          <div class="sc-tag" id="tagLQIM" style="color:var(--green)"></div>
-        </div>
-        <div class="sc-row">
-          <div class="sc-method" style="color:var(--amber)">GA</div>
-          <div class="sc-bar-bg"><div class="sc-bar-fill" id="barGA" style="background:var(--amber);width:0%"></div></div>
-          <div class="sc-val" id="valGA">—</div>
-          <div class="sc-tag" id="tagGA"></div>
-        </div>
-        <div class="sc-row">
-          <div class="sc-method" style="color:var(--red)">PSO</div>
-          <div class="sc-bar-bg"><div class="sc-bar-fill" id="barPSO" style="background:var(--red);width:0%"></div></div>
-          <div class="sc-val" id="valPSO">—</div>
-          <div class="sc-tag" id="tagPSO"></div>
-        </div>
-      </div>
-
-      <!-- Latency comparison -->
-      <div style="margin-bottom:16px">
-        <div class="sc-title">Task latency — ms (lower = better)</div>
-        <div class="sc-row">
-          <div class="sc-method" style="color:var(--accent);font-weight:600">LQIM</div>
-          <div class="sc-bar-bg"><div class="sc-bar-fill" id="latBarLQIM" style="background:var(--accent);width:0%"></div></div>
-          <div class="sc-val" id="latValLQIM">—</div>
-          <div class="sc-tag" id="latTagLQIM" style="color:var(--green)"></div>
-        </div>
-        <div class="sc-row">
-          <div class="sc-method" style="color:var(--amber)">GA</div>
-          <div class="sc-bar-bg"><div class="sc-bar-fill" id="latBarGA" style="background:var(--amber);width:0%"></div></div>
-          <div class="sc-val" id="latValGA">—</div>
-          <div class="sc-tag" id="latTagGA"></div>
-        </div>
-        <div class="sc-row">
-          <div class="sc-method" style="color:var(--red)">PSO</div>
-          <div class="sc-bar-bg"><div class="sc-bar-fill" id="latBarPSO" style="background:var(--red);width:0%"></div></div>
-          <div class="sc-val" id="latValPSO">—</div>
-          <div class="sc-tag" id="latTagPSO"></div>
-        </div>
-      </div>
-
-      <!-- Node load bars -->
-      <div class="sc-title">Edge node load distribution</div>
-      <div id="nodeBars"></div>
-
-      <button class="reset-btn" onclick="resetAll()">Reset & Schedule Another Task</button>
-    </div>
-  </div>
-
 </div>
 
 <script>
-// ══════════════════════════════════════════════════════════
-//  EDGE NODES — matches backend/lqim.py build_nodes()
-// ══════════════════════════════════════════════════════════
-const NODES = [
-  {id:0,cpu:1.80,ram:2,load:34,energy:192.6},
-  {id:1,cpu:2.16,ram:4,load:11,energy:73.4},
-  {id:2,cpu:1.29,ram:4,load:29,energy:179.9},
-  {id:3,cpu:2.33,ram:2,load:44,energy:53.1},
-  {id:4,cpu:2.53,ram:4,load:12,energy:81.9},
-  {id:5,cpu:1.49,ram:2,load:26,energy:95.6},
-  {id:6,cpu:1.89,ram:2,load:29,energy:93.7},
-  {id:7,cpu:1.42,ram:1,load:20,energy:93.8},
-  {id:8,cpu:1.93,ram:8,load:13,energy:167.8},
-  {id:9,cpu:2.02,ram:2,load:7,energy:138.9},
-];
-let liveLoads = NODES.map(n => n.load);
-let taskCount = 0;
+// ═══ NODES (matches backend) ═══
+const NODES=[{id:0,cpu:1.80,ram:2,load:34},{id:1,cpu:2.16,ram:4,load:11},{id:2,cpu:1.29,ram:4,load:29},{id:3,cpu:2.33,ram:2,load:44},{id:4,cpu:2.53,ram:4,load:12},{id:5,cpu:1.49,ram:2,load:26},{id:6,cpu:1.89,ram:2,load:29},{id:7,cpu:1.42,ram:1,load:20},{id:8,cpu:1.93,ram:8,load:13},{id:9,cpu:2.02,ram:2,load:7}];
+let liveLoads=NODES.map(n=>n.load);
+let taskCount=0,allResults=[],liveInterval=null;
 
-const PRESETS = {
-  iot:     {cpu:0.40,mem:120,exec:35,sens:0.85,type:'IoT',     desc:'Factory floor monitoring — temperature + vibration sensors'},
-  db:      {cpu:1.10,mem:400,exec:120,sens:0.50,type:'DB',      desc:'ERP query — 100K record retrieval across distributed nodes'},
-  camera:  {cpu:1.60,mem:500,exec:45,sens:0.90,type:'Camera',   desc:'CCTV analytics — real-time object detection at 30fps'},
-  health:  {cpu:0.60,mem:250,exec:25,sens:0.95,type:'Health',   desc:'Patient ECG monitor — continuous vital sign analysis'},
-  vehicle: {cpu:1.80,mem:550,exec:20,sens:1.00,type:'Vehicle',  desc:'Autonomous vehicle — LIDAR point cloud processing'},
-};
+const PRESETS={iot:{cpu:.4,mem:120,exec:35,sens:.85,type:'IoT',desc:'Factory floor — temperature + vibration sensors'},db:{cpu:1.1,mem:400,exec:120,sens:.5,type:'DB',desc:'ERP query — 100K record retrieval'},camera:{cpu:1.6,mem:500,exec:45,sens:.9,type:'Camera',desc:'CCTV analytics — real-time object detection'},health:{cpu:.6,mem:250,exec:25,sens:.95,type:'Health',desc:'ECG monitor — continuous vital signs'},vehicle:{cpu:1.8,mem:550,exec:20,sens:1,type:'Vehicle',desc:'LIDAR — point cloud processing'}};
 
-let currentTab = 'manual';
-let currentPreset = 'iot';
+let currentTab='custom',currentPreset='iot';
 
-function sv(id,v) { document.getElementById(id).textContent = v; }
-
-function switchTab(t) {
-  currentTab = t;
-  document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['manual','preset'][i] === t));
-  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-  document.getElementById('tab-' + t).classList.add('active');
+// ═══ TAB SWITCHING ═══
+function switchTab(t){
+  currentTab=t;
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['custom','preset','batch','live'][i]===t));
+  document.querySelectorAll('.tp').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+t).classList.add('active');
+  document.getElementById('runBtn').style.display=(t==='live')?'none':'flex';
 }
-
-function loadPreset(btn, key) {
-  currentPreset = key;
-  document.querySelectorAll('#tab-preset .dtype-pill').forEach(el => el.classList.remove('active'));
+function loadPreset(btn,key){
+  currentPreset=key;
+  document.querySelectorAll('#tab-preset .pill').forEach(el=>el.classList.remove('active'));
   btn.classList.add('active');
-  const p = PRESETS[key];
-  document.getElementById('presetPreview').textContent =
-    `cpu: ${p.cpu.toFixed(2)} GHz  mem: ${p.mem} MB  exec: ${p.exec} ms  sens: ${p.sens.toFixed(2)}\ntype: ${p.type}  ${p.desc}`;
+  const p=PRESETS[key];
+  document.getElementById('presetPrev').textContent=`CPU: ${p.cpu.toFixed(2)} GHz · Mem: ${p.mem} MB · Exec: ${p.exec} ms · Sens: ${p.sens.toFixed(2)}\nType: ${p.type} · ${p.desc}`;
 }
 
-function getTask() {
-  if (currentTab === 'manual') {
+// ═══ GET TASK(S) ═══
+function getCustomTask(){
+  return {cpu:+document.getElementById('inCpu').value||.8,mem:+document.getElementById('inMem').value||200,exec:+document.getElementById('inExec').value||60,sens:+document.getElementById('inSens').value||.7,type:document.getElementById('inType').value};
+}
+function getTasks(){
+  if(currentTab==='custom') return [getCustomTask()];
+  if(currentTab==='preset'){const p=PRESETS[currentPreset];return [{cpu:p.cpu,mem:p.mem,exec:p.exec,sens:p.sens,type:p.type}];}
+  if(currentTab==='batch') return parseBatch();
+  return [randomTask()];
+}
+
+function parseBatch(){
+  const csv=document.getElementById('csvInput').value.trim();
+  if(csv){
+    const lines=csv.split('\n').filter(l=>l.trim()&&!l.startsWith('cpu'));
+    return lines.map(l=>{const p=l.split(',').map(s=>s.trim());return{cpu:+p[0]||.5,mem:+p[1]||200,exec:+p[2]||50,sens:+p[3]||.7,type:p[4]||'IoT'};});
+  }
+  const n=+document.getElementById('batchCount').value||10;
+  return Array.from({length:n},()=>randomTask());
+}
+
+function randomTask(){
+  const types=['IoT','DB','Camera','Health','Vehicle'];
+  const t=types[Math.floor(Math.random()*5)];
+  const ranges={IoT:[.2,.8,50,200,10,60,.6,1],DB:[.5,1.5,200,600,30,150,.3,.7],Camera:[.8,2,300,600,20,80,.7,1],Health:[.3,1,100,400,15,50,.8,1],Vehicle:[1,2,400,600,10,40,.9,1]};
+  const r=ranges[t];
+  return{cpu:+(r[0]+Math.random()*(r[1]-r[0])).toFixed(2),mem:Math.round(r[2]+Math.random()*(r[3]-r[2])),exec:Math.round(r[4]+Math.random()*(r[5]-r[4])),sens:+(r[6]+Math.random()*(r[7]-r[6])).toFixed(2),type:t};
+}
+
+function generateBatch(){
+  const n=+document.getElementById('batchCount').value||10;
+  const tasks=Array.from({length:n},()=>randomTask());
+  let csv='cpu_demand,memory_mb,exec_time_ms,latency_sensitivity,task_type\n';
+  tasks.forEach(t=>csv+=`${t.cpu},${t.mem},${t.exec},${t.sens},${t.type}\n`);
+  document.getElementById('csvInput').value=csv;
+  document.getElementById('batchPrev').textContent=`Generated ${n} random tasks. Click "Run LQIM Scheduler" to process.`;
+}
+
+// ═══ API BASE URL ═══
+const API = window.location.origin.includes('localhost:5000') ? '' : 'http://localhost:5000';
+
+// ═══ CALL PYTHON BACKEND via API ═══
+async function scheduleViaAPI(task) {
+  try {
+    const res = await fetch(API + '/api/schedule', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        cpu_demand: task.cpu,
+        memory_mb: task.mem,
+        exec_time_ms: task.exec,
+        latency_sensitivity: task.sens,
+        task_type: task.type,
+      }),
+    });
+    const data = await res.json();
+    // Update local loads from server state
+    if (data.node_loads) liveLoads = data.node_loads;
     return {
-      cpu: +document.getElementById('cpuSlider').value,
-      mem: +document.getElementById('memSlider').value,
-      exec: +document.getElementById('execSlider').value,
-      sens: +document.getElementById('sensSlider').value,
-      type: document.getElementById('taskType').value,
+      lqim: {nodeIdx: data.lqim.assigned_node, iters: data.lqim.iterations, lat: data.lqim.latency_ms, eng: data.lqim.energy_j, util: data.lqim.utilization / 100, fitness: data.lqim.fitness},
+      ga:   {nodeIdx: data.ga.assigned_node, iters: data.ga.iterations, lat: data.ga.latency_ms, eng: data.ga.energy_j, util: data.ga.utilization / 100, fitness: data.ga.fitness},
+      pso:  {nodeIdx: data.pso.assigned_node, iters: data.pso.iterations, lat: data.pso.latency_ms, eng: data.pso.energy_j, util: data.pso.utilization / 100, fitness: data.pso.fitness},
+      task_id: data.task_id,
     };
-  } else {
-    const p = PRESETS[currentPreset];
-    return { cpu: p.cpu, mem: p.mem, exec: p.exec, sens: p.sens, type: p.type };
+  } catch (e) {
+    console.warn('API unavailable, using JS fallback:', e.message);
+    return null; // Will fall back to JS
   }
 }
 
-// ══════════════════════════════════════════════════════════
-//  FITNESS FUNCTION — identical to backend
-// ══════════════════════════════════════════════════════════
-function fitness(nodeIdx, task) {
-  const node = NODES[nodeIdx];
-  const load = liveLoads[nodeIdx] / 100;
-  const availCpu = Math.max(node.cpu * (1 - load), 0.01);
-  const cpuRatio = Math.max(availCpu / task.cpu, 0.1);
-
-  let lat = task.exec / cpuRatio * (1 + load * 0.5);
-  lat *= (1 + task.sens * 0.3);
-
-  const memRatio = task.mem / (node.ram * 1024);
-  if (memRatio > 0.8) lat *= (1 + (memRatio - 0.8) * 2);
-
-  const eng = task.cpu * 2.5 * (lat / 1000);
-  const util = Math.min(load + task.cpu / node.cpu, 1.0);
-  const score = 0.4 * (lat / 300) + 0.35 * (eng / 5) + 0.25 * (1 - util);
-  return { score, lat, eng, util };
+// ═══ JS FALLBACK (runs if Flask server is not started) ═══
+function fitness(ni,task){
+  const n=NODES[ni],load=liveLoads[ni]/100;
+  const avail=Math.max(n.cpu*(1-load),.01),ratio=Math.max(avail/task.cpu,.1);
+  let lat=task.exec/ratio*(1+load*.5);lat*=(1+task.sens*.3);
+  const mr=task.mem/(n.ram*1024);if(mr>.8)lat*=(1+(mr-.8)*2);
+  const eng=task.cpu*2.5*(lat/1000),util=Math.min(load+task.cpu/n.cpu,1);
+  return{score:.4*(lat/300)+.35*(eng/5)+.25*(1-util),lat,eng,util};
+}
+function runLQIM(task){
+  const POP=30,N=10,ROT=.04*Math.PI,MAX=80,MIN=12,v=1/Math.sqrt(2);
+  let pop=Array.from({length:POP},()=>Array.from({length:N},()=>({a:v,b:v})));
+  let bf=Infinity,bn=0,bl=0,be=0,bu=0,it=0;
+  for(let i=0;i<MAX;i++){it=i+1;
+    for(let p=0;p<POP;p++){const pr=pop[p].map(q=>q.b*q.b);const tot=pr.reduce((a,b)=>a+b,0);let r=Math.random()*tot,ch=N-1;for(let n=0;n<N;n++){r-=pr[n];if(r<=0){ch=n;break;}}
+    const f=fitness(ch,task);if(f.score<bf){bf=f.score;bn=ch;bl=f.lat;be=f.eng;bu=f.util;}}
+    const rs=ROT*Math.max(.4,1-i/MAX);
+    for(let p=0;p<POP;p++)for(let n=0;n<N;n++){const d=n===bn?rs:-rs*.4;const c=Math.cos(d),s=Math.sin(d);const a=pop[p][n].a,b=pop[p][n].b;const na=c*a-s*b,nb=s*a+c*b;const nm=Math.sqrt(na*na+nb*nb);if(nm>1e-10){pop[p][n].a=na/nm;pop[p][n].b=nb/nm;}}
+    if(i>=MIN){const avg=pop.reduce((s,ind)=>s+ind[bn].b*ind[bn].b,0)/POP;if(avg>.92)break;}}
+  return{nodeIdx:bn,iters:it,lat:bl,eng:be,util:bu,fitness:bf};
+}
+function runGA(task){
+  const POP=30,N=10,MAX=80,MUT=.18;let pop=Array.from({length:POP},()=>Math.floor(Math.random()*N));
+  let bf=Infinity,bn=0,bl=0,be=0,bu=0;
+  for(let g=0;g<MAX;g++){const fits=[];for(let i=0;i<POP;i++){const f=fitness(pop[i],task);fits.push(f.score);if(f.score<bf){bf=f.score;bn=pop[i];bl=f.lat;be=f.eng;bu=f.util;}}
+  const np=[];for(let i=0;i<POP;i++){const a=Math.floor(Math.random()*POP),b=Math.floor(Math.random()*POP);np.push(fits[a]<fits[b]?pop[a]:pop[b]);}
+  for(let i=0;i<POP-1;i+=2)if(Math.random()<.8){const t=np[i];np[i]=np[i+1];np[i+1]=t;}
+  pop=np.map(g=>Math.random()<MUT?Math.floor(Math.random()*N):g);}
+  return{nodeIdx:bn,iters:MAX,lat:bl,eng:be,util:bu,fitness:bf};
+}
+function runPSO(task){
+  const NP=30,N=10,MAX=80,W=.7,C1=1.5,C2=1.5;
+  let pos=Array.from({length:NP},()=>Math.random()*(N-1)),vel=Array.from({length:NP},()=>(Math.random()-.5)*4);
+  let pb=[...pos],pbf=new Array(NP).fill(Infinity),gb=0,gbf=Infinity,bl=0,be=0,bu=0;
+  for(let i=0;i<MAX;i++){for(let j=0;j<NP;j++){const idx=Math.min(Math.max(Math.round(pos[j]),0),N-1);const f=fitness(idx,task);if(f.score<pbf[j]){pbf[j]=f.score;pb[j]=pos[j];}if(f.score<gbf){gbf=f.score;gb=pos[j];bl=f.lat;be=f.eng;bu=f.util;}}
+  for(let j=0;j<NP;j++){vel[j]=W*vel[j]+C1*Math.random()*(pb[j]-pos[j])+C2*Math.random()*(gb-pos[j]);vel[j]=Math.max(-3,Math.min(3,vel[j]));pos[j]=Math.max(0,Math.min(N-1,pos[j]+vel[j]));}}
+  return{nodeIdx:Math.min(Math.max(Math.round(gb),0),N-1),iters:MAX,lat:bl,eng:be,util:bu,fitness:gbf};
 }
 
-// ══════════════════════════════════════════════════════════
-//  LQIM — REAL implementation matching backend
-// ══════════════════════════════════════════════════════════
-function runLQIM(task) {
-  const POP = 30, N = NODES.length, ROT = 0.04 * Math.PI, MAX = 80, MIN_IT = 12;
-
-  // Init Q-bit population: each is {a: alpha, b: beta}
-  const v = 1 / Math.sqrt(2);
-  let pop = Array.from({length: POP}, () =>
-    Array.from({length: N}, () => ({a: v, b: v}))
-  );
-
-  let bestFit = Infinity, bestNode = 0, iters = 0;
-  let bestLat = 0, bestEng = 0, bestUtil = 0;
-
-  for (let it = 0; it < MAX; it++) {
-    iters = it + 1;
-
-    // Measure + evaluate
-    for (let p = 0; p < POP; p++) {
-      const probs = pop[p].map(q => q.b * q.b); // β²
-      const total = probs.reduce((a, b) => a + b, 0);
-      let r = Math.random() * total, chosen = N - 1;
-      for (let n = 0; n < N; n++) { r -= probs[n]; if (r <= 0) { chosen = n; break; } }
-
-      const f = fitness(chosen, task);
-      if (f.score < bestFit) {
-        bestFit = f.score; bestNode = chosen;
-        bestLat = f.lat; bestEng = f.eng; bestUtil = f.util;
-      }
-    }
-
-    // Adaptive rotation
-    const rotStep = ROT * Math.max(0.4, 1 - it / MAX);
-    for (let p = 0; p < POP; p++) {
-      for (let n = 0; n < N; n++) {
-        const delta = (n === bestNode) ? rotStep : (-rotStep * 0.4);
-        const cos = Math.cos(delta), sin = Math.sin(delta);
-        const a = pop[p][n].a, b = pop[p][n].b;
-        const na = cos * a - sin * b;
-        const nb = sin * a + cos * b;
-        const norm = Math.sqrt(na * na + nb * nb);
-        if (norm > 1e-10) { pop[p][n].a = na / norm; pop[p][n].b = nb / norm; }
-      }
-    }
-
-    // Convergence check
-    if (it >= MIN_IT) {
-      const avgBeta = pop.reduce((s, ind) => s + ind[bestNode].b * ind[bestNode].b, 0) / POP;
-      if (avgBeta > 0.92) break;
-    }
+// ═══ SMART RUNNER: tries API first, falls back to JS ═══
+async function runScheduler(task) {
+  const apiResult = await scheduleViaAPI(task);
+  if (apiResult) {
+    return { r: apiResult.lqim, ga: apiResult.ga, pso: apiResult.pso, source: 'python' };
   }
-
-  return { node: NODES[bestNode], nodeIdx: bestNode, iters, lat: bestLat, eng: bestEng, util: bestUtil, fitness: bestFit };
+  // Fallback to JS
+  const r = runLQIM(task), ga = runGA(task), pso = runPSO(task);
+  liveLoads[r.nodeIdx] = Math.min(liveLoads[r.nodeIdx] + Math.random() * 4 + 2, 95);
+  return { r, ga, pso, source: 'javascript' };
 }
 
-// ══════════════════════════════════════════════════════════
-//  GA — REAL implementation matching backend
-// ══════════════════════════════════════════════════════════
-function runGA(task) {
-  const POP = 30, N = NODES.length, MAX = 80, MUT = 0.18;
+// ═══ TERMINAL ═══
+let termEl;
+function tlog(m,c='tc'){const d=document.createElement('div');d.className='tl '+c;d.textContent=m;termEl.appendChild(d);termEl.scrollTop=termEl.scrollHeight;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function setStep(i,s){document.getElementById('ps'+i).className='ps '+s;if(s==='done')document.getElementById('pd'+i).textContent='✓';}
 
-  let pop = Array.from({length: POP}, () => Math.floor(Math.random() * N));
-  let bestFit = Infinity, bestNode = 0;
-  let bestLat = 0, bestEng = 0, bestUtil = 0;
-
-  for (let gen = 0; gen < MAX; gen++) {
-    const fits = [];
-    for (let i = 0; i < POP; i++) {
-      const f = fitness(pop[i], task);
-      fits.push(f.score);
-      if (f.score < bestFit) {
-        bestFit = f.score; bestNode = pop[i];
-        bestLat = f.lat; bestEng = f.eng; bestUtil = f.util;
-      }
-    }
-
-    // Tournament selection
-    const newPop = [];
-    for (let i = 0; i < POP; i++) {
-      const a = Math.floor(Math.random() * POP);
-      const b = Math.floor(Math.random() * POP);
-      newPop.push(fits[a] < fits[b] ? pop[a] : pop[b]);
-    }
-
-    // Crossover
-    for (let i = 0; i < POP - 1; i += 2) {
-      if (Math.random() < 0.8) {
-        const tmp = newPop[i]; newPop[i] = newPop[i+1]; newPop[i+1] = tmp;
-      }
-    }
-
-    // Mutation
-    pop = newPop.map(g => Math.random() < MUT ? Math.floor(Math.random() * N) : g);
-  }
-
-  return { lat: bestLat, eng: bestEng, util: bestUtil, iters: MAX, fitness: bestFit, nodeIdx: bestNode };
-}
-
-// ══════════════════════════════════════════════════════════
-//  PSO — REAL implementation matching backend
-// ══════════════════════════════════════════════════════════
-function runPSO(task) {
-  const NP = 30, N = NODES.length, MAX = 80;
-  const W = 0.7, C1 = 1.5, C2 = 1.5;
-
-  let pos = Array.from({length: NP}, () => Math.random() * (N - 1));
-  let vel = Array.from({length: NP}, () => (Math.random() - 0.5) * 4);
-  let pbest = [...pos];
-  let pbestFit = new Array(NP).fill(Infinity);
-  let gbest = 0, gbestFit = Infinity;
-  let bestLat = 0, bestEng = 0, bestUtil = 0;
-
-  for (let it = 0; it < MAX; it++) {
-    for (let i = 0; i < NP; i++) {
-      const idx = Math.min(Math.max(Math.round(pos[i]), 0), N - 1);
-      const f = fitness(idx, task);
-      if (f.score < pbestFit[i]) { pbestFit[i] = f.score; pbest[i] = pos[i]; }
-      if (f.score < gbestFit) {
-        gbestFit = f.score; gbest = pos[i];
-        bestLat = f.lat; bestEng = f.eng; bestUtil = f.util;
-      }
-    }
-    for (let i = 0; i < NP; i++) {
-      const r1 = Math.random(), r2 = Math.random();
-      vel[i] = W * vel[i] + C1 * r1 * (pbest[i] - pos[i]) + C2 * r2 * (gbest - pos[i]);
-      vel[i] = Math.max(-3, Math.min(3, vel[i]));
-      pos[i] = Math.max(0, Math.min(N - 1, pos[i] + vel[i]));
-    }
-  }
-
-  const bestNode = Math.min(Math.max(Math.round(gbest), 0), N - 1);
-  return { lat: bestLat, eng: bestEng, util: bestUtil, iters: MAX, fitness: gbestFit, nodeIdx: bestNode };
-}
-
-// ══════════════════════════════════════════════════════════
-//  TERMINAL + ANIMATION HELPERS
-// ══════════════════════════════════════════════════════════
-let termLog;
-function tlog(msg, cls='tc') {
-  const d = document.createElement('div'); d.className = 'tl ' + cls; d.textContent = msg;
-  termLog.appendChild(d); termLog.scrollTop = termLog.scrollHeight;
-}
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-function setStep(i, state) {
-  document.getElementById('ps' + i).className = 'pipe-step ' + state;
-  if (state === 'done') document.getElementById('pd' + i).textContent = '✓';
-}
-
-// ══════════════════════════════════════════════════════════
-//  MAIN SCHEDULER
-// ══════════════════════════════════════════════════════════
-async function startSchedule() {
-  const task = getTask();
-  taskCount++;
-  document.getElementById('runBtn').disabled = true;
-
-  const b2 = document.getElementById('block2');
-  b2.classList.add('show');
+// ═══ MAIN SCHEDULER ═══
+async function startSchedule(){
+  const tasks=getTasks();
+  document.getElementById('runBtn').disabled=true;
+  const b2=document.getElementById('block2');b2.classList.add('show');
   b2.scrollIntoView({behavior:'smooth',block:'start'});
   document.getElementById('block3').classList.remove('show');
-  document.getElementById('procSubtitle').textContent = `Task #${taskCount} — ${task.type}`;
-  termLog = document.getElementById('termLog');
-  termLog.innerHTML = '';
+  termEl=document.getElementById('termLog');termEl.innerHTML='';
 
-  for (let i = 0; i < 7; i++) {
-    document.getElementById('ps'+i).className = 'pipe-step';
-    document.getElementById('pd'+i).textContent = String(i+1).padStart(2,'0');
+  const bg=document.getElementById('batchGrid');bg.innerHTML='';
+  tasks.forEach((_,i)=>{const d=document.createElement('div');d.className='bdot q';d.id='bd'+i;bg.appendChild(d);});
+
+  for(let ti=0;ti<tasks.length;ti++){
+    const task=tasks[ti];taskCount++;
+    document.getElementById('procSub').textContent=`Task #${taskCount} — ${task.type}${tasks.length>1?` (${ti+1}/${tasks.length})`:''}`;
+    const bd=document.getElementById('bd'+ti);if(bd)bd.className='bdot a';
+
+    for(let i=0;i<7;i++){document.getElementById('ps'+i).className='ps';document.getElementById('pd'+i).textContent=String(i+1).padStart(2,'0');}
+
+    tlog(`// Task #${taskCount} · ${task.type} · CPU:${task.cpu} Mem:${task.mem} Exec:${task.exec} Sens:${task.sens}`,'tc');
+
+    // Steps 0-2
+    setStep(0,'active');tlog('[01] Init Q-bit pop (30×10)','tp2');
+    const qr=document.getElementById('qbitRow');qr.innerHTML='';
+    for(let i=0;i<10;i++){const q=document.createElement('div');q.className='qb sup';q.id='qb'+i;q.textContent='α';qr.appendChild(q);}
+    await sleep(tasks.length>5?100:400);setStep(0,'done');
+
+    setStep(1,'active');tlog('[02] Measuring candidates…','tp2');
+    for(let t=0;t<2;t++){for(let i=0;i<10;i++){const e=document.getElementById('qb'+i);if(e){e.className=Math.random()>.5?'qb sup':'qb';e.textContent=Math.random()>.5?'1':'0';}}await sleep(tasks.length>5?50:150);}
+    setStep(1,'done');setStep(2,'active');tlog('[03] Computing fitness…','tp2');await sleep(tasks.length>5?50:300);setStep(2,'done');
+
+    // Run algorithms via API (or JS fallback)
+    const {r, ga, pso, source} = await runScheduler(task);
+    tlog(`[engine: ${source}]`, source === 'python' ? 'tok' : 'tw');
+
+    setStep(3,'active');tlog(`[04] Best → Node-${r.nodeIdx} F=${r.fitness.toFixed(4)}`,'tp2');
+    document.getElementById('bestDesc').textContent=`Best: Node-${r.nodeIdx} (${NODES[r.nodeIdx].cpu}GHz, ${NODES[r.nodeIdx].ram}GB)`;
+    await sleep(tasks.length>5?50:250);setStep(3,'done');
+
+    // Rotation animation
+    setStep(4,'active');
+    const fill=document.getElementById('iterFill'),lbl=document.getElementById('iterLabel'),pct=document.getElementById('iterPct');
+    const steps=Math.min(8,r.iters);
+    for(let i=1;i<=steps;i++){const cur=Math.round(i/steps*r.iters);const p=Math.round(cur/80*100);fill.style.width=p+'%';lbl.textContent=`Iter ${cur}/80`;pct.textContent=p+'%';await sleep(tasks.length>5?20:60);}
+    fill.style.width=Math.round(r.iters/80*100)+'%';lbl.textContent=`Converged at ${r.iters}`;pct.textContent=Math.round(r.iters/80*100)+'%';
+    for(let i=0;i<10;i++){const e=document.getElementById('qb'+i);if(e){e.className=i===r.nodeIdx?'qb best':'qb';e.textContent=i===r.nodeIdx?'✓':'0';}}
+    await sleep(tasks.length>5?50:200);setStep(4,'done');
+
+    setStep(5,'active');tlog(`[06] Converged iter ${r.iters} (saved ${80-r.iters}) ✓`,'tok');
+    document.getElementById('convDesc').textContent=`β²>0.92 at iter ${r.iters} — ${80-r.iters} saved`;
+    await sleep(tasks.length>5?30:200);setStep(5,'done');
+
+    setStep(6,'active');
+    tlog(`[07] GA→Node-${ga.nodeIdx} ${ga.lat.toFixed(1)}ms | PSO→Node-${pso.nodeIdx} ${pso.lat.toFixed(1)}ms`,'tc');
+    tlog(`     LQIM→Node-${r.nodeIdx} ${r.lat.toFixed(1)}ms ${r.iters}iters ✓`,'tok');
+    await sleep(tasks.length>5?30:200);setStep(6,'done');
+
+    liveLoads[r.nodeIdx]=Math.min(liveLoads[r.nodeIdx]+Math.random()*4+2,95);
+    if(bd)bd.className='bdot d';
+
+    allResults.push({id:taskCount,task,lqim:r,ga,pso});
   }
 
-  tlog(`// Task #${taskCount} · Type: ${task.type}`, 'tc');
-  tlog(`// CPU: ${task.cpu.toFixed(1)}GHz  Mem: ${task.mem}MB  Exec: ${task.exec}ms  Sens: ${task.sens.toFixed(1)}`, 'tc');
-
-  // Step 0 — init qbits
-  setStep(0, 'active');
-  tlog('[01] Initialising Q-bit population (pop=30, nodes=10)…', 'tp');
-  const qr = document.getElementById('qbitRow'); qr.innerHTML = '';
-  for (let i = 0; i < 10; i++) {
-    const q = document.createElement('div'); q.className = 'qb sup'; q.id = 'qb'+i; q.textContent = 'α=β';
-    qr.appendChild(q);
-  }
-  await sleep(500);
-  setStep(0, 'done');
-
-  // Step 1 — measure
-  setStep(1, 'active');
-  tlog('[02] Measuring Q-bits → candidate assignments…', 'tp');
-  for (let t = 0; t < 3; t++) {
-    for (let i = 0; i < 10; i++) {
-      const el = document.getElementById('qb'+i);
-      if (el) { el.className = Math.random() > 0.5 ? 'qb sup' : 'qb'; el.textContent = Math.random() > 0.5 ? '1' : '0'; }
-    }
-    await sleep(200);
-  }
-  setStep(1, 'done');
-
-  // Step 2 — fitness
-  setStep(2, 'active');
-  tlog('[03] Computing fitness: F = 0.4·Lat + 0.35·Eng + 0.25·(1−Util)', 'tp');
-  await sleep(400);
-  setStep(2, 'done');
-
-  // Run LQIM
-  const result = runLQIM(task);
-
-  // Step 3 — best
-  setStep(3, 'active');
-  tlog(`[04] Global best → Node-${result.nodeIdx} (${NODES[result.nodeIdx].cpu}GHz, ${NODES[result.nodeIdx].ram}GB)`, 'tp');
-  document.getElementById('bestDesc').textContent =
-    `Best: Node-${result.nodeIdx} · F = ${result.fitness.toFixed(4)}`;
-  await sleep(350);
-  setStep(3, 'done');
-
-  // Step 4 — rotation with progress
-  setStep(4, 'active');
-  const fill = document.getElementById('iterFill');
-  const lbl = document.getElementById('iterLabel');
-  const pct = document.getElementById('iterPct');
-  const steps = Math.min(12, result.iters);
-  for (let i = 1; i <= steps; i++) {
-    const cur = Math.round(i / steps * result.iters);
-    const p = Math.round(cur / 80 * 100);
-    fill.style.width = p + '%';
-    lbl.textContent = `Iteration ${cur} / 80`;
-    pct.textContent = p + '%';
-    await sleep(80);
-  }
-  fill.style.width = Math.round(result.iters / 80 * 100) + '%';
-  lbl.textContent = `Converged at iteration ${result.iters}`;
-  pct.textContent = Math.round(result.iters / 80 * 100) + '%';
-
-  for (let i = 0; i < 10; i++) {
-    const el = document.getElementById('qb'+i);
-    if (el) { el.className = i === result.nodeIdx ? 'qb best' : 'qb'; el.textContent = i === result.nodeIdx ? '✓' : '0'; }
-  }
-  await sleep(300);
-  setStep(4, 'done');
-
-  // Step 5 — convergence
-  setStep(5, 'active');
-  tlog(`[06] Converged at iter ${result.iters} (saved ${80 - result.iters} iterations) ✓`, 'tok');
-  document.getElementById('convDesc').textContent =
-    `β² > 0.92 at iteration ${result.iters} — ${80 - result.iters} iterations saved vs GA/PSO`;
-  await sleep(300);
-  setStep(5, 'done');
-
-  // Step 6 — run baselines
-  setStep(6, 'active');
-  tlog('[07] Running GA baseline (80 iterations)…', 'tp');
-  const gaRes = runGA(task);
-  tlog(`     GA  → Node-${gaRes.nodeIdx} · Lat: ${gaRes.lat.toFixed(1)}ms · 80 iters`, 'tc');
-  tlog('[07] Running PSO baseline (80 iterations)…', 'tp');
-  const psoRes = runPSO(task);
-  tlog(`     PSO → Node-${psoRes.nodeIdx} · Lat: ${psoRes.lat.toFixed(1)}ms · 80 iters`, 'tc');
-  tlog(`     LQIM → Node-${result.nodeIdx} · Lat: ${result.lat.toFixed(1)}ms · ${result.iters} iters ✓`, 'tok');
-  await sleep(300);
-  setStep(6, 'done');
-
-  // Update loads
-  liveLoads[result.nodeIdx] = Math.min(liveLoads[result.nodeIdx] + Math.random() * 4 + 2, 95);
-
-  await sleep(200);
-  showOutput(result, gaRes, psoRes, task);
+  const last=allResults[allResults.length-1];
+  showOutput(last.lqim,last.ga,last.pso,last.task);
+  document.getElementById('runBtn').disabled=false;
 }
 
-function showOutput(r, ga, pso, task) {
-  document.getElementById('bannerTitle').textContent = `Task #${taskCount} (${task.type}) → Node-${r.nodeIdx}`;
-  document.getElementById('bannerSub').textContent =
-    `Converged in ${r.iters} iterations (${Math.round((1 - r.iters/80)*100)}% fewer than GA/PSO) · ${NODES[r.nodeIdx].cpu}GHz · ${NODES[r.nodeIdx].ram}GB`;
+function showOutput(r,ga,pso,task){
+  document.getElementById('bannerT').textContent=`Task #${taskCount} (${task.type}) → Node-${r.nodeIdx}`;
+  document.getElementById('bannerS').textContent=`${r.iters} iters (${Math.round((1-r.iters/80)*100)}% fewer) · ${NODES[r.nodeIdx].cpu}GHz · ${NODES[r.nodeIdx].ram}GB`;
+  document.getElementById('oLat').textContent=r.lat.toFixed(1);
+  document.getElementById('oEng').textContent=r.eng.toFixed(4);
+  document.getElementById('oLoad').textContent=(r.util*100).toFixed(1);
 
-  document.getElementById('oLat').textContent = r.lat.toFixed(1);
-  document.getElementById('oEng').textContent = r.eng.toFixed(4);
-  document.getElementById('oLoad').textContent = (r.util * 100).toFixed(1);
+  setTimeout(()=>{
+    const lp=Math.round(r.iters/80*100);
+    document.getElementById('barLQIM').style.width=lp+'%';document.getElementById('barLQIM').textContent=r.iters;
+    document.getElementById('barGA').style.width='100%';document.getElementById('barGA').textContent='80';
+    document.getElementById('barPSO').style.width='100%';document.getElementById('barPSO').textContent='80';
+  },200);
+  document.getElementById('valLQIM').textContent=r.iters;document.getElementById('valGA').textContent='80';document.getElementById('valPSO').textContent='80';
+  document.getElementById('tagLQIM').textContent=`↓${Math.round((1-r.iters/80)*100)}%`;document.getElementById('tagGA').textContent='fixed';document.getElementById('tagPSO').textContent='fixed';
 
-  // Iteration bars
-  const lqimPct = Math.round(r.iters / 80 * 100);
-  setTimeout(() => {
-    document.getElementById('barLQIM').style.width = lqimPct + '%';
-    document.getElementById('barLQIM').textContent = r.iters + ' iters';
-    document.getElementById('barGA').style.width = '100%';
-    document.getElementById('barGA').textContent = '80 iters';
-    document.getElementById('barPSO').style.width = '100%';
-    document.getElementById('barPSO').textContent = '80 iters';
-  }, 200);
-  document.getElementById('valLQIM').textContent = r.iters;
-  document.getElementById('valGA').textContent = '80';
-  document.getElementById('valPSO').textContent = '80';
-  document.getElementById('tagLQIM').textContent = `↓${Math.round((1-r.iters/80)*100)}% faster`;
-  document.getElementById('tagGA').textContent = 'fixed';
-  document.getElementById('tagPSO').textContent = 'fixed';
+  const ml=Math.max(r.lat,ga.lat,pso.lat);
+  setTimeout(()=>{
+    document.getElementById('latBL').style.width=Math.round(r.lat/ml*100)+'%';document.getElementById('latBL').textContent=r.lat.toFixed(1)+'ms';
+    document.getElementById('latBG').style.width=Math.round(ga.lat/ml*100)+'%';document.getElementById('latBG').textContent=ga.lat.toFixed(1)+'ms';
+    document.getElementById('latBP').style.width=Math.round(pso.lat/ml*100)+'%';document.getElementById('latBP').textContent=pso.lat.toFixed(1)+'ms';
+  },400);
+  document.getElementById('latVL').textContent=r.lat.toFixed(1)+'ms';document.getElementById('latVG').textContent=ga.lat.toFixed(1)+'ms';document.getElementById('latVP').textContent=pso.lat.toFixed(1)+'ms';
+  const best=Math.min(r.lat,ga.lat,pso.lat);
+  document.getElementById('latTL').textContent=r.lat<=best?'✓ best':'';document.getElementById('latTG').textContent=ga.lat<=best?'✓ best':'';document.getElementById('latTP').textContent=pso.lat<=best?'✓ best':'';
+  document.getElementById('latTL').style.color=r.lat<=best?'var(--green)':'var(--muted)';
 
-  // Latency bars
-  const maxLat = Math.max(r.lat, ga.lat, pso.lat);
-  const minLat = Math.min(r.lat, ga.lat, pso.lat);
-  const winner = minLat === r.lat ? 'LQIM' : minLat === ga.lat ? 'GA' : 'PSO';
+  const nb=document.getElementById('nodeBars');nb.innerHTML='';
+  NODES.forEach((n,i)=>{const l=liveLoads[i];const c=l<30?'var(--green)':l<65?'var(--amber)':'var(--red)';const w=i===r.nodeIdx;
+    nb.innerHTML+=`<div class="nbr ${w?'win':''}"><span class="nbi">N-${String(i).padStart(2,'0')}${w?' ←':''}</span><div class="nbt"><div class="nbf" style="width:${l.toFixed(0)}%;background:${c}"></div></div><span class="nbp">${l.toFixed(0)}%</span></div>`;});
 
-  setTimeout(() => {
-    document.getElementById('latBarLQIM').style.width = Math.round(r.lat / maxLat * 100) + '%';
-    document.getElementById('latBarLQIM').textContent = r.lat.toFixed(1) + 'ms';
-    document.getElementById('latBarGA').style.width = Math.round(ga.lat / maxLat * 100) + '%';
-    document.getElementById('latBarGA').textContent = ga.lat.toFixed(1) + 'ms';
-    document.getElementById('latBarPSO').style.width = Math.round(pso.lat / maxLat * 100) + '%';
-    document.getElementById('latBarPSO').textContent = pso.lat.toFixed(1) + 'ms';
-  }, 400);
+  document.getElementById('reportBtn').style.display=allResults.length>0?'inline-flex':'none';
+  const b3=document.getElementById('block3');b3.classList.add('show');
+  setTimeout(()=>b3.scrollIntoView({behavior:'smooth',block:'start'}),200);
+}
 
-  document.getElementById('latValLQIM').textContent = r.lat.toFixed(1) + 'ms';
-  document.getElementById('latValGA').textContent = ga.lat.toFixed(1) + 'ms';
-  document.getElementById('latValPSO').textContent = pso.lat.toFixed(1) + 'ms';
+// ═══ LIVE SIMULATOR ═══
+function toggleLive(){
+  if(liveInterval){stopLive();return;}
+  const btn=document.getElementById('liveBtn');btn.innerHTML='<span class="live-dot"></span> Stop Live';
+  document.getElementById('liveDot').style.display='inline-block';
+  const log=document.getElementById('liveLog');log.textContent='';
 
-  // Show which is best for latency
-  const lqimVsGa = ((ga.lat - r.lat) / ga.lat * 100);
-  document.getElementById('latTagLQIM').textContent = winner === 'LQIM' ? '✓ best' : (lqimVsGa > 0 ? `↓${lqimVsGa.toFixed(0)}%` : `↑${Math.abs(lqimVsGa).toFixed(0)}%`);
-  document.getElementById('latTagGA').textContent = winner === 'GA' ? '✓ best' : '';
-  document.getElementById('latTagPSO').textContent = winner === 'PSO' ? '✓ best' : '';
-  document.getElementById('latTagLQIM').style.color = winner === 'LQIM' || lqimVsGa > 0 ? 'var(--green)' : 'var(--red)';
+  const src=document.getElementById('liveSource').value;
+  const typeMap={factory:['IoT','Camera','DB'],hospital:['Health','Camera','IoT'],traffic:['Camera','Vehicle','IoT']};
+  const types=typeMap[src]||typeMap.factory;
 
-  // Node bars
-  const nb = document.getElementById('nodeBars');
-  nb.innerHTML = '';
-  NODES.forEach((n, i) => {
-    const load = liveLoads[i];
-    const color = load < 30 ? 'var(--green)' : load < 65 ? 'var(--amber)' : 'var(--red)';
-    const win = i === r.nodeIdx;
-    nb.innerHTML += `<div class="nb-row ${win?'winner':''}">
-      <span class="nb-id">N-${String(i).padStart(2,'0')}${win?' ←':''}</span>
-      <div class="nb-track"><div class="nb-fill" style="width:${load.toFixed(0)}%;background:${color}"></div></div>
-      <span class="nb-pct">${load.toFixed(0)}%</span>
-    </div>`;
+  liveInterval=setInterval(async()=>{
+    const task=randomTask();task.type=types[Math.floor(Math.random()*types.length)];
+    const ts=new Date().toLocaleTimeString();
+    log.textContent+=`[${ts}] ${task.type} → CPU:${task.cpu} Mem:${task.mem} Exec:${task.exec}ms\n`;
+    log.scrollTop=log.scrollHeight;
+
+    taskCount++;
+    const {r, ga, pso, source} = await runScheduler(task);
+    allResults.push({id:taskCount,task,lqim:r,ga,pso});
+
+    log.textContent+=`  → Node-${r.nodeIdx} | Lat:${r.lat.toFixed(1)}ms | ${r.iters} iters ✓\n`;
+    log.scrollTop=log.scrollHeight;
+
+    // Show block3 with latest
+    showOutput(r,ga,pso,task);
+    document.getElementById('block3').classList.add('show');
+    document.getElementById('block2').classList.remove('show');
+  },2000);
+}
+function stopLive(){
+  clearInterval(liveInterval);liveInterval=null;
+  document.getElementById('liveBtn').innerHTML='Start Live Feed';
+}
+
+// ═══ REPORT ═══
+function showReport(){
+  if(!allResults.length)return;
+  document.getElementById('reportDate').textContent=`Generated: ${new Date().toLocaleString()} · ${allResults.length} tasks processed`;
+
+  const sm=document.getElementById('reportSummary');
+  const avgLat=(allResults.reduce((s,r)=>s+r.lqim.lat,0)/allResults.length).toFixed(1);
+  const avgEng=(allResults.reduce((s,r)=>s+r.lqim.eng,0)/allResults.length).toFixed(4);
+  const avgIter=(allResults.reduce((s,r)=>s+r.lqim.iters,0)/allResults.length).toFixed(0);
+  const gaAvgLat=(allResults.reduce((s,r)=>s+r.ga.lat,0)/allResults.length).toFixed(1);
+  sm.innerHTML=`
+    <div class="rs-card"><div class="rs-label">LQIM Avg Latency</div><div class="rs-val" style="color:var(--accent)">${avgLat}ms</div></div>
+    <div class="rs-card"><div class="rs-label">GA Avg Latency</div><div class="rs-val" style="color:var(--amber)">${gaAvgLat}ms</div></div>
+    <div class="rs-card"><div class="rs-label">Avg Iterations</div><div class="rs-val" style="color:var(--green)">${avgIter}/80</div></div>
+    <div class="rs-card"><div class="rs-label">Iteration Savings</div><div class="rs-val" style="color:var(--green)">${Math.round((1-avgIter/80)*100)}%</div></div>`;
+
+  const tb=document.getElementById('reportBody');tb.innerHTML='';
+  allResults.forEach(r=>{
+    tb.innerHTML+=`<tr><td>${r.id}</td><td>${r.task.type}</td><td>${r.task.cpu}</td><td>${r.task.mem}</td><td>${r.task.exec}</td><td>${r.task.sens}</td><td>N-${r.lqim.nodeIdx}</td><td>${r.lqim.lat.toFixed(1)}</td><td>${r.ga.lat.toFixed(1)}</td><td>${r.pso.lat.toFixed(1)}</td><td>${r.lqim.iters}</td></tr>`;
   });
-
-  const b3 = document.getElementById('block3');
-  b3.classList.add('show');
-  setTimeout(() => b3.scrollIntoView({behavior:'smooth',block:'start'}), 200);
-  document.getElementById('runBtn').disabled = false;
+  document.getElementById('reportOverlay').classList.add('show');
 }
+function closeReport(){document.getElementById('reportOverlay').classList.remove('show');}
 
-function resetAll() {
+function resetAll(){
   document.getElementById('block2').classList.remove('show');
   document.getElementById('block3').classList.remove('show');
-  document.getElementById('termLog').innerHTML = '';
-  document.getElementById('iterFill').style.width = '0%';
-  document.getElementById('iterLabel').textContent = 'Iteration 0 / 80';
-  document.getElementById('iterPct').textContent = '0%';
-  ['LQIM','GA','PSO'].forEach(m => {
-    const b = document.getElementById('bar'+m); if(b) { b.style.width='0%'; b.textContent=''; }
-    const l = document.getElementById('latBar'+m); if(l) { l.style.width='0%'; l.textContent=''; }
-  });
+  document.getElementById('termLog').innerHTML='';
+  document.getElementById('iterFill').style.width='0%';
+  ['barLQIM','barGA','barPSO','latBL','latBG','latBP'].forEach(id=>{const e=document.getElementById(id);if(e){e.style.width='0%';e.textContent='';}});
   window.scrollTo({top:0,behavior:'smooth'});
 }
 </script>

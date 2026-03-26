@@ -169,9 +169,10 @@ The iteration savings compound over time: for a system processing 10,000 tasks/h
 lqim-edge-scheduler/
 ├── backend/
 │   ├── lqim.py              # Core: LQIM + GA + PSO algorithms
+│   ├── app.py               # Flask API server (connects frontend ↔ backend)
 │   └── generate_results.py  # Run simulation → JSON output
 ├── frontend/
-│   └── index.html           # Interactive demo (real algorithms in JS)
+│   └── index.html           # Interactive demo UI
 ├── tests/
 │   └── test_lqim.py         # 32 unit tests
 ├── results/
@@ -181,6 +182,17 @@ lqim-edge-scheduler/
 └── README.md
 ```
 
+### Architecture
+
+```
+Browser (index.html)  ──POST /api/schedule──►  Flask (app.py)  ──calls──►  lqim.py
+                      ◄──── JSON results ────                              (Python LQIM/GA/PSO)
+```
+
+The frontend communicates with the Python backend through a REST API built with Flask. When a task is submitted in the UI, it is sent as a POST request to the Flask server, which runs the LQIM, GA, and PSO algorithms in Python and returns the results as JSON. The frontend then animates the 7-phase pipeline and displays the comparison.
+
+If the Flask server is not running, the frontend automatically falls back to JavaScript implementations of the same algorithms, so the demo still works in standalone mode.
+
 ---
 
 ## Setup and Installation
@@ -189,7 +201,7 @@ lqim-edge-scheduler/
 
 ```
 Python 3.10+
-numpy
+numpy, flask, flask-cors, pytest
 ```
 
 ### Install
@@ -200,7 +212,34 @@ cd lqim-edge-scheduler
 pip install -r requirements.txt
 ```
 
-### Run Simulation
+### Run the Full Application (recommended)
+
+```bash
+python backend/app.py
+```
+
+Then open **http://localhost:5000** in your browser. This serves the frontend and connects it to the Python backend via API.
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/schedule` | Schedule a single task (JSON body) |
+| POST | `/api/schedule/batch` | Schedule multiple tasks at once |
+| GET | `/api/nodes` | Get current node states and loads |
+| GET | `/api/history` | Get all past scheduling results |
+| POST | `/api/reset` | Reset schedulers to initial state |
+| POST | `/api/generate` | Generate random tasks for testing |
+
+### Example API Call
+
+```bash
+curl -X POST http://localhost:5000/api/schedule \
+  -H "Content-Type: application/json" \
+  -d '{"cpu_demand":0.8,"memory_mb":200,"exec_time_ms":60,"latency_sensitivity":0.7,"task_type":"Camera"}'
+```
+
+### Run Standalone Simulation (terminal only)
 
 ```bash
 python backend/lqim.py
@@ -235,12 +274,18 @@ cd frontend && python -m http.server 8000
 
 ## Demo Walkthrough
 
-1. **Block 1 — Task Input**: Choose manual sliders or a preset scenario (Factory IoT, CCTV, Patient Monitor, etc.)
-2. **Click "Run LQIM Scheduler"**
-3. **Block 2 — Processing**: Watch the 7-phase pipeline animate. The iteration progress bar shows LQIM converging early while GA/PSO would need all 80 iterations.
-4. **Block 3 — Results**: See the assigned node, metrics, and side-by-side comparison bars for both iteration count and task latency.
+1. **Start the server**: `python backend/app.py` → open **http://localhost:5000**
+2. **Block 1 — Task Input** (4 modes):
+   - *Custom Input*: Type exact values — CPU (GHz), Memory (MB), Execution Time (ms), Latency Sensitivity (0–1)
+   - *Preset*: Click a real-world scenario (Factory IoT, CCTV, Patient Monitor, etc.)
+   - *Batch / CSV*: Generate N random tasks or paste CSV data for bulk scheduling
+   - *Live Simulator*: Start a real-time IoT data stream (generates tasks every 2 seconds)
+3. **Click "Run LQIM Scheduler"**
+4. **Block 2 — Processing**: Watch the 7-phase pipeline animate. The terminal log shows `[engine: python]` confirming the backend is connected.
+5. **Block 3 — Results**: See the assigned node, latency/energy metrics, and side-by-side comparison bars (iterations + latency) for LQIM vs GA vs PSO.
+6. **View Full Report**: Click to see a summary + task-by-task table of all scheduled tasks.
 
-All three algorithms (LQIM, GA, PSO) run **real implementations** in the browser — no simulated or approximated results.
+All three algorithms (LQIM, GA, PSO) run as **real independent implementations** in Python. The frontend calls the backend API — you can verify this in the browser's Network tab.
 
 ---
 
